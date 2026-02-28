@@ -1,0 +1,73 @@
+> Task :clean UP-TO-DATE
+> Task :app:clean
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateDebugResValues
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:checkDebugAarMetadata
+> Task :app:packageDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:parseDebugLocalResources
+> Task :app:mergeDebugResources
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:javaPreCompileDebug
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :app:desugarDebugFileDependencies
+> Task :app:mergeDebugJniLibFolders
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:processDebugManifestForPackage
+> Task :app:checkDebugDuplicateClasses
+> Task :app:mergeLibDexDebug
+> Task :app:processDebugResources
+> Task :app:mergeExtDexDebug
+> Task :app:compileDebugKotlin
+w: file:///C:/Users/Efendi.Tec/doctor/DiagnosticApp/app/src/main/java/com/diagnostics/app/MainActivity.kt:66:37 Variable 'route' is never used
+w: file:///C:/Users/Efendi.Tec/doctor/DiagnosticApp/app/src/main/java/com/diagnostics/app/data/collectors/AudioCollector.kt:115:64 Unnecessary safe call on a non-null receiver of type MediaPlayer?
+w: file:///C:/Users/Efendi.Tec/doctor/DiagnosticApp/app/src/main/java/com/diagnostics/app/data/collectors/ConnectivityCollector.kt:90:34 'getter for phoneCount: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/Efendi.Tec/doctor/DiagnosticApp/app/src/main/java/com/diagnostics/app/data/collectors/ConnectivityCollector.kt:102:21 Variable 'telephonyManager' is never used
+w: file:///C:/Users/Efendi.Tec/doctor/DiagnosticApp/app/src/main/java/com/diagnostics/app/data/collectors/DisplayCollector.kt:15:46 'getter for defaultDisplay: Display!' is deprecated. Deprecated in Java
+w: file:///C:/Users/Efendi.Tec/doctor/DiagnosticApp/app/src/main/java/com/diagnostics/app/data/collectors/DisplayCollector.kt:55:34 'getter for supportedHdrTypes: IntArray!' is deprecated. Deprecated in Java
+w: file:///C:/Users/Efendi.Tec/doctor/DiagnosticApp/app/src/main/java/com/diagnostics/app/data/collectors/SensorCollector.kt:51:20 'TYPE_ORIENTATION: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/Efendi.Tec/doctor/DiagnosticApp/app/src/main/java/com/diagnostics/app/data/collectors/SensorCollector.kt:55:20 'TYPE_TEMPERATURE: Int' is deprecated. Deprecated in Java
+w: file:///C:/Users/Efendi.Tec/doctor/DiagnosticApp/app/src/main/java/com/diagnostics/app/data/collectors/StressTestEngine.kt:103:34 Parameter 'coreId' is never used, could be renamed to _
+w: file:///C:/Users/Efendi.Tec/doctor/DiagnosticApp/app/src/main/java/com/diagnostics/app/data/collectors/StressTestEngine.kt:374:35 Parameter 'totalCores' is never used
+
+> Task :app:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:dexBuilderDebug
+> Task :app:processDebugJavaRes
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugJavaResource FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:mergeDebugJavaResource'.
+> A failure occurred while executing com.android.build.gradle.internal.tasks.MergeJavaResWorkAction
+   > 2 files found with path 'META-INF/DEPENDENCIES' from inputs:
+      - C:\Users\Efendi.Tec\scoop\apps\gradle\current\.gradle\caches\transforms-3\1e5a8049e6c169f22fa7a0b5b91061fc\transformed\jetified-httpclient-4.5.14.jar
+      - C:\Users\Efendi.Tec\scoop\apps\gradle\current\.gradle\caches\transforms-3\0b22dff92df1f38e6e11e75505f92793\transformed\jetified-httpcore-4.4.16.jar
+     Adding a packagingOptions block may help, please refer to
+     https://developer.android.com/reference/tools/gradle-api/8.2/com/android/build/api/dsl/ResourcesPackagingOptions
+     for more information
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 58s
+٣٢ actionable tasks: ٣١ executed, ١ up-to-date

@@ -1,0 +1,179 @@
+═══════════════════════════════════════════════════════════════
+                    COPYRIGHT DECLARATION
+             DiagnosticApp - All Rights Reserved
+═══════════════════════════════════════════════════════════════
+
+COPYRIGHT OWNER
+───────────────
+  Name:         Hasan Oso
+  Student ID:   230212925
+  Institution:  OSTİM Technical University
+  Department:   AI Engineering Department
+  Year:         2025
+
+═══════════════════════════════════════════════════════════════
+
+DECLARATION OF INTELLECTUAL PROPERTY OWNERSHIP
+
+I, Hasan Oso, hereby declare that I am the sole creator, author, and owner
+of all intellectual property contained within the DiagnosticApp project,
+including but not limited to:
+
+───────────────────────────────────────────────────────────────
+1. SOURCE CODE
+───────────────────────────────────────────────────────────────
+
+  All Kotlin source files, XML layouts, Gradle build scripts, configuration
+  files, and any other code files contained within this repository.
+
+  This includes approximately:
+  • 30+ Kotlin source files
+  • 18 data collectors
+  • 3 stress test implementations
+  • 1 quality scoring engine
+  • Multiple utility and helper classes
+  • All UI components and screens
+  • Build configurations and scripts
+
+───────────────────────────────────────────────────────────────
+2. ALGORITHMS & METHODOLOGIES
+───────────────────────────────────────────────────────────────
+
+  The following proprietary algorithms are exclusively owned:
+
+  a) Multi-Source Battery Capacity Estimation
+     - Sysfs reader with dual-cell detection
+     - Charge counter based calculation
+     - Voltage curve interpolation
+     - Multi-source weighted averaging with confidence scoring
+
+  b) Hybrid Voltage Monitoring System
+     - Direct voltage derivative analysis
+     - Synthetic voltage calculation from multi-sensor fusion
+     - Automatic source selection (DIRECT → BLENDED → SYNTHETIC)
+     - PMIC stall detection
+
+  c) Adaptive Stress Testing Framework
+     - Quick benchmark-based device profiling
+     - Dynamic iteration calculation based on device tier
+     - Battery stress test with internal resistance measurement
+     - Storage type detection (UFS/eMMC) via performance profiling
+
+  d) Device Age Forensic Estimation
+     - 5-vector age determination (sysfs, system properties,
+       OEM serial decoding, vendor partition, Build.TIME)
+     - Samsung serial number year/month extraction
+     - Weighted confidence scoring from multiple sources
+
+  e) Scan Quality Scoring System
+     - 10-dimension quality evaluation
+     - Data contamination detection
+     - Voltage glitch analysis
+     - Automated quality classification (EXCELLENT to INVALID)
+
+───────────────────────────────────────────────────────────────
+3. DATA & DATASETS
+───────────────────────────────────────────────────────────────
+
+  All data collected, generated, or derived through the operation of
+  DiagnosticApp, including:
+
+  • Device scan results
+  • Battery health metrics and time-series data
+  • Stress test results and performance benchmarks
+  • Machine learning training datasets
+  • Quality-scored diagnostic records
+  • Firebase/Firestore stored data
+
+───────────────────────────────────────────────────────────────
+4. DOCUMENTATION & DESIGN
+───────────────────────────────────────────────────────────────
+
+  • All README and documentation files
+  • System architecture designs
+  • Data flow diagrams
+  • API specifications
+  • User interface designs
+  • Research notes and analysis documents
+
+───────────────────────────────────────────────────────────────
+5. TRADEMARKS & BRANDING
+───────────────────────────────────────────────────────────────
+
+  • "DiagnosticApp" name and branding
+  • Application icons and visual assets
+  • Any associated logos or marks
+
+═══════════════════════════════════════════════════════════════
+
+ACADEMIC REGISTRATION
+
+This project is registered as an academic work at:
+
+  University: OSTİM Technical University
+  Department: AI Engineering Department
+  Student:    Hasan Oso (ID: 230212925)
+  Year:       2024-2025 Academic Year
+  Type:       Graduation Project / Research Project
+
+The academic registration provides additional legal protection
+under educational institution policies and Turkish copyright law.
+
+═══════════════════════════════════════════════════════════════
+
+PATENT RESERVATION
+
+The Owner reserves the right to file patent applications for any
+and all patentable inventions, methods, processes, and techniques
+embodied in or derived from this Software, including but not limited
+to:
+
+  • Battery health estimation methods
+  • Device age forensic determination techniques
+  • Adaptive stress testing algorithms
+  • Multi-sensor voltage estimation systems
+  • Automated device quality scoring methods
+
+All patent rights are expressly reserved.
+
+═══════════════════════════════════════════════════════════════
+
+COMMERCIAL LICENSING
+
+This Software is available for commercial licensing. For inquiries
+regarding:
+
+  • Commercial use licenses
+  • OEM integration partnerships
+  • Academic collaboration agreements
+  • Research licensing
+
+Contact:
+  Owner:      Hasan Oso
+  Email:      [your-email]
+  LinkedIn:   [your-linkedin]
+  University: OSTİM Technical University
+
+═══════════════════════════════════════════════════════════════
+
+LEGAL NOTICE
+
+This copyright declaration is made in accordance with:
+
+  • Turkish Intellectual Property Law No. 5846
+    (Fikir ve Sanat Eserleri Kanunu)
+  • Berne Convention for the Protection of Literary
+    and Artistic Works
+  • WIPO Copyright Treaty (WCT)
+  • TRIPS Agreement (Trade-Related Aspects of
+    Intellectual Property Rights)
+
+The Owner's rights are automatically protected upon creation
+of the work and do not require formal registration, though
+additional registrations may be pursued.
+
+═══════════════════════════════════════════════════════════════
+
+© 2025 Hasan Oso. ALL RIGHTS RESERVED.
+
+Last Updated: February 2025

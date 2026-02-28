@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- اسم التطبيق -->
+    <string name="app_name">Phone Doctor</string>
+    
+    <!-- الشاشة الرئيسية -->
+    <string name="welcome_title">مرحباً بك في فحص الهواتف</string>
+    <string name="welcome_subtitle">تحليل شامل للجهاز في 15 دقيقة</string>
+    <string name="device_info">معلومات الجهاز</string>
+    <string name="android_version">إصدار أندرويد</string>
+    <string name="security_patch">تحديث الأمان</string>
+    <string name="device_age">عمر الجهاز</string>
+    <string name="years_old">%d سنة</string>
+    <string name="months_old">%d شهر</string>
+    <string name="start_scan">ابدأ الفحص الشامل</string>
+    <string name="view_results">عرض النتائج</string>
+    <string name="app_version">الإصدار %s</string>
+    
+    <!-- شاشة التقدم -->
+    <string name="scan_in_progress">الفحص قيد التنفيذ</string>
+    <string name="please_wait">الرجاء الانتظار، قد يستغرق الفحص حتى 15 دقيقة</string>
+    <string name="do_not_close">لا تغلق التطبيق أثناء الفحص</string>
+    
+    <!-- مراحل الفحص -->
+    <string name="stage_collecting_data">جمع بيانات الجهاز</string>
+    <string name="stage_cpu_test">اختبار أداء المعالج</string>
+    <string name="stage_memory_test">اختبار الذاكرة والتخزين</string>
+    <string name="stage_battery_test">اختبار صحة البطارية</string>
+    <string name="stage_complete">اكتمل الفحص</string>
+    
+    <!-- تفاصيل التقدم -->
+    <string name="progress_collecting_data">جمع معلومات العتاد…</string>
+    <string name="progress_cpu_test">اختبار المعالج تحت الضغط…</string>
+    <string name="progress_storage_test">قياس سرعة التخزين…</string>
+    <string name="progress_battery_test">تحليل صحة البطارية…</string>
+    <string name="progress_finalizing">إنهاء النتائج…</string>
+    
+    <!-- القيم المباشرة -->
+    <string name="cpu_temp">حرارة المعالج: %s°C</string>
+    <string name="battery_current">تيار البطارية: %d mA</string>
+    <string name="storage_speed">سرعة التخزين: %.1f MB/s</string>
+    <string name="progress_percent">%d%%</string>
+    
+    <!-- نافذة الاستبيان -->
+    <string name="survey_title">ساعدنا في تحسين الدقة</string>
+    <string name="survey_subtitle">ملاحظاتك تساعد في تدريب نموذج الذكاء الاصطناعي</string>
+    <string name="survey_skip">تخطي</string>
+    <string name="survey_submit">إرسال</string>
+    
+    <!-- أسئلة الاستبيان -->
+    <string name="survey_q1">ما هي حالة الجهاز العامة؟</string>
+    <string name="survey_q1_excellent">ممتاز</string>
+    <string name="survey_q1_very_good">جيد جداً</string>
+    <string name="survey_q1_good">جيد</string>
+    <string name="survey_q1_fair">مقبول</string>
+    <string name="survey_q1_poor">سيئ</string>
+    
+    <string name="survey_q2">هل تم استبدال أي قطع؟</string>
+    <string name="survey_q2_none">لا يوجد</string>
+    <string name="survey_q2_screen">الشاشة</string>
+    <string name="survey_q2_battery">البطارية</string>
+    <string name="survey_q2_motherboard">اللوحة الأم</string>
+    <string name="survey_q2_camera">الكاميرا</string>
+    <string name="survey_q2_other">أخرى</string>
+    
+    <string name="survey_q3">هل الجهاز أصلي أم مُجدد؟</string>
+    <string name="survey_q3_original">أصلي 100%</string>
+    <string name="survey_q3_official_refurb">مُجدد رسمياً</string>
+    <string name="survey_q3_unofficial_refurb">مُجدد (غير رسمي)</string>
+    <string name="survey_q3_unsure">غير متأكد</string>
+    
+    <string name="survey_q4">مستوى الاستخدام اليومي؟</string>
+    <string name="survey_q4_light">خفيف</string>
+    <string name="survey_q4_moderate">متوسط</string>
+    <string name="survey_q4_heavy">كثيف</string>
+    
+    <string name="survey_q5">هل توجد مشاكل معروفة؟</string>
+    <string name="survey_q5_slow">بطء الأداء</string>
+    <string name="survey_q5_heat">ارتفاع الحرارة</string>
+    <string name="survey_q5_battery_drain">استهلاك البطارية</string>
+    <string name="survey_q5_freezing">تجمد التطبيقات</string>
+    <string name="survey_q5_charging">مشاكل الشحن</string>
+    <string name="survey_q5_none">لا يوجد</string>
+    
+    <string name="survey_q6">النتيجة المتوقعة (1-100):</string>
+    <string name="survey_q7">ملاحظات إضافية (اختياري):</string>
+    <string name="survey_q7_hint">أي ملاحظات أخرى عن الجهاز…</string>
+    
+    <!-- الأخطاء -->
+    <string name="error_scan_failed">فشل الفحص. حاول مرة أخرى.</string>
+    <string name="error_no_permission">لم يتم منح الأذونات المطلوبة</string>
+    <string name="error_network">خطأ في الشبكة. تحقق من الاتصال.</string>
+    <string name="error_upload_failed">فشل رفع النتائج</string>
+    <string name="error_unknown">حدث خطأ غير معروف</string>
+    
+    <!-- الإجراءات الشائعة -->
+    <string name="retry">إعادة المحاولة</string>
+    <string name="cancel">إلغاء</string>
+    <string name="ok">حسناً</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    
+    <!-- النتائج -->
+    <string name="scan_results">نتائج الفحص</string>
+    <string name="health_score">النتيجة: %d/100</string>
+    <string name="upload_successful">تم رفع النتائج بنجاح</string>
+    
+    <!-- التخزين والذاكرة -->
+    <string name="ram_usage">الذاكرة: %1$d MB / %2$d MB</string>
+    <string name="storage_usage">التخزين: %1$.1f GB / %2$.1f GB</string>
+
+    <!-- Labeling Screen -->
+    <string name="overall_health">الحالة العامة</string>
+    <string name="authenticity">الأصالة</string>
+    <string name="refurbishment">حالة الإصلاح</string>
+    <string name="usage_intensity">كثافة الاستخدام</string>
+    <string name="replaced_components">المكونات المستبدلة</string>
+    <string name="technician_notes">ملاحظات الفني</string>
+    <string name="submit">إرسال</string>
+    <string name="error_upload">فشل الرفع</string>
+
+    <!-- Authenticity Options -->
+    <string name="auth_genuine">أصلي</string>
+    <string name="auth_suspicious">مشكوك فيه</string>
+    <string name="auth_fake">مزيف</string>
+
+    <!-- Refurbishment Options -->
+    <string name="refurb_original">أصلي</string>
+    <string name="refurb_minor">إصلاح بسيط</string>
+    <string name="refurb_refurbished">مجدد</string>
+
+    <!-- Usage Intensity Options -->
+    <string name="usage_light">خفيف</string>
+    <string name="usage_moderate">متوسط</string>
+    <string name="usage_heavy">كثيف</string>
+
+    <!-- Component Options -->
+    <string name="component_battery">البطارية</string>
+    <string name="component_screen">الشاشة</string>
+    <string name="component_camera">الكاميرا</string>
+    <string name="back_to_home">العودة للرئيسية</string>
+    <string name="battery_test">اختبار البطارية</string>
+    <string name="camera">كاميرا</string>
+    <string name="collecting_data">جمع البيانات</string>
+    <string name="complete">مكتمل</string>
+    <string name="cpu_test">اختبار المعالج</string>
+    <string name="language">اللغة</string>
+    <string name="screen">شاشة</string>
+    <string name="storage_test">اختبار التخزين</string>
+    <string name="stress_testing">اختبار الإجهاد</string>
+    <string name="success_upload">تم الرفع بنجاح</string>
+    <string name="initializing">جارٍ التهيئة…</string>
+</resources>

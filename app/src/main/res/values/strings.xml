@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Phone Doctor</string>
+    
+    <!-- Main Screen -->
+    <string name="welcome_title">Welcome to Phone Diagnostics</string>
+    <string name="welcome_subtitle">Complete hardware analysis in 8 minutes</string>
+    <string name="device_info">Device Information</string>
+    <string name="android_version">Android Version</string>
+    <string name="security_patch">Security Patch</string>
+    <string name="device_age">Device Age</string>
+    <string name="years_old">%d years old</string>
+    <string name="months_old">%d months old</string>
+    <string name="start_scan">Start Full Scan</string>
+    <string name="view_results">View Results</string>
+    <string name="app_version">Version %s</string>
+    
+    <!-- Progress Screen -->
+    <string name="scan_in_progress">Scan in Progress</string>
+    <string name="please_wait">Please wait, this may take up to 8 minutes</string>
+    <string name="do_not_close">Do not close the app during the scan</string>
+    
+    <!-- Scan Stages -->
+    <string name="stage_collecting_data">Collecting Device Data</string>
+    <string name="stage_cpu_test">CPU Performance Test</string>
+    <string name="stage_memory_test">Memory &amp; Storage Test</string>
+    <string name="stage_battery_test">Battery Health Test</string>
+    <string name="stage_complete">Scan Complete</string>
+    
+    <!-- Progress Details -->
+    <string name="progress_collecting_data">Gathering hardware information…</string>
+    <string name="progress_cpu_test">Testing processor under load…</string>
+    <string name="progress_storage_test">Measuring storage speed…</string>
+    <string name="progress_battery_test">Analyzing battery health…</string>
+    <string name="progress_finalizing">Finalizing results…</string>
+    
+    <!-- Live Values -->
+    <string name="cpu_temp">CPU Temp: %s°C</string>
+    <string name="battery_current">Battery Current: %d mA</string>
+    <string name="storage_speed">Storage Speed: %.1f MB/s</string>
+    <string name="progress_percent">%d%%</string>
+    
+    <!-- Survey Dialog -->
+    <string name="survey_title">Help Us Improve Accuracy</string>
+    <string name="survey_subtitle">Your feedback helps train our AI model</string>
+    <string name="survey_skip">Skip</string>
+    <string name="survey_submit">Submit</string>
+    
+    <!-- Survey Questions -->
+    <string name="survey_q1">Overall device condition?</string>
+    <string name="survey_q1_excellent">Excellent</string>
+    <string name="survey_q1_very_good">Very Good</string>
+    <string name="survey_q1_good">Good</string>
+    <string name="survey_q1_fair">Fair</string>
+    <string name="survey_q1_poor">Poor</string>
+    
+    <string name="survey_q2">Any replaced components?</string>
+    <string name="survey_q2_none">None</string>
+    <string name="survey_q2_screen">Screen</string>
+    <string name="survey_q2_battery">Battery</string>
+    <string name="survey_q2_motherboard">Motherboard</string>
+    <string name="survey_q2_camera">Camera</string>
+    <string name="survey_q2_other">Other</string>
+    
+    <string name="survey_q3">Is the device original or refurbished?</string>
+    <string name="survey_q3_original">100% Original</string>
+    <string name="survey_q3_official_refurb">Officially Refurbished</string>
+    <string name="survey_q3_unofficial_refurb">Unofficially Refurbished</string>
+    <string name="survey_q3_unsure">Not Sure</string>
+    
+    <string name="survey_q4">Daily usage intensity?</string>
+    <string name="survey_q4_light">Light</string>
+    <string name="survey_q4_moderate">Moderate</string>
+    <string name="survey_q4_heavy">Heavy</string>
+    
+    <string name="survey_q5">Any known issues?</string>
+    <string name="survey_q5_slow">Slow Performance</string>
+    <string name="survey_q5_heat">Overheating</string>
+    <string name="survey_q5_battery_drain">Battery Drain</string>
+    <string name="survey_q5_freezing">App Freezing</string>
+    <string name="survey_q5_charging">Charging Issues</string>
+    <string name="survey_q5_none">None</string>
+    
+    <string name="survey_q6">Expected health score (1–100):</string>
+    <string name="survey_q7">Additional notes (optional):</string>
+    <string name="survey_q7_hint">Any other observations about the device…</string>
+    
+    <!-- Errors -->
+    <string name="error_scan_failed">Scan failed. Please try again.</string>
+    <string name="error_no_permission">Required permissions not granted</string>
+    <string name="error_network">Network error. Check your connection.</string>
+    <string name="error_upload_failed">Failed to upload results</string>
+    <string name="error_unknown">An unknown error occurred</string>
+    
+    <!-- Common Actions -->
+    <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    
+    <!-- Results -->
+    <string name="scan_results">Scan Results</string>
+    <string name="health_score">Health Score: %d/100</string>
+    <string name="upload_successful">Results uploaded successfully</string>
+    
+    <!-- Storage and RAM -->
+    <string name="ram_usage">RAM: %1$d MB / %2$d MB</string>
+    <string name="storage_usage">Storage: %1$.1f GB / %2$.1f GB</string>
+    
+    <!-- Missing strings for Kotlin screens -->
+    <string name="language">Language</string>
+    <string name="collecting_data">Collecting Data</string>
+    <string name="stress_testing">Stress Testing</string>
+    <string name="cpu_test">CPU Test</string>
+    <string name="storage_test">Storage Test</string>
+    <string name="battery_test">Battery Test</string>
+    <string name="complete">Complete</string>
+    <string name="success_upload">Upload Successful</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="error_upload">Upload Failed</string>
+    <string name="submit">Submit</string>
+    <string name="overall_health">Overall Health</string>
+    <string name="authenticity">Authenticity</string>
+    <string name="refurbishment">Refurbishment</string>
+    <string name="usage_intensity">Usage Intensity</string>
+    <string name="replaced_components">Replaced Components</string>
+    <string name="technician_notes">Technician Notes</string>
+    <string name="battery">Battery</string>
+    <string name="screen">Screen</string>
+    <string name="camera">Camera</string>
+
+    <!-- Authenticity Options -->
+    <string name="auth_genuine">Genuine</string>
+    <string name="auth_suspicious">Suspicious</string>
+    <string name="auth_fake">Fake</string>
+
+    <!-- Refurbishment Options -->
+    <string name="refurb_original">Original</string>
+    <string name="refurb_minor">Minor Repair</string>
+    <string name="refurb_refurbished">Refurbished</string>
+
+    <!-- Usage Intensity Options -->
+    <string name="usage_light">Light</string>
+    <string name="usage_moderate">Moderate</string>
+    <string name="usage_heavy">Heavy</string>
+
+    <!-- Component Options -->
+    <string name="component_battery">Battery</string>
+    <string name="component_screen">Screen</string>
+    <string name="component_camera">Camera</string>
+    <string name="initializing">Initializing…</string>
+</resources>

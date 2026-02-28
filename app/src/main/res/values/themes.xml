@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme for light mode -->
+    <style name="Theme.DiagnosticApp" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- No custom attributes needed for now -->
+    </style>
+</resources>

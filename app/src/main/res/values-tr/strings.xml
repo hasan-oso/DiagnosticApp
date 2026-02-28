@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Uygulama Adı -->
+    <string name="app_name">Phone Doctor</string>
+    
+    <!-- Ana Ekran -->
+    <string name="welcome_title">Telefon Teşhisine Hoş Geldiniz</string>
+    <string name="welcome_subtitle">15 dakikada eksiksiz donanım analizi</string>
+    <string name="device_info">Cihaz Bilgileri</string>
+    <string name="android_version">Android Sürümü</string>
+    <string name="security_patch">Güvenlik Güncellemesi</string>
+    <string name="device_age">Cihaz Yaşı</string>
+    <string name="years_old">%d yaşında</string>
+    <string name="months_old">%d aylık</string>
+    <string name="start_scan">Tam Tarama Başlat</string>
+    <string name="view_results">Sonuçları Görüntüle</string>
+    <string name="app_version">Sürüm %s</string>
+    
+    <!-- İlerleme Ekranı -->
+    <string name="scan_in_progress">Tarama Devam Ediyor</string>
+    <string name="please_wait">Lütfen bekleyin, bu 15 dakika sürebilir</string>
+    <string name="do_not_close">Tarama sırasında uygulamayı kapatmayın</string>
+    
+    <!-- Tarama Aşamaları -->
+    <string name="stage_collecting_data">Cihaz Verileri Toplanıyor</string>
+    <string name="stage_cpu_test">İşlemci Performans Testi</string>
+    <string name="stage_memory_test">Bellek ve Depolama Testi</string>
+    <string name="stage_battery_test">Pil Sağlığı Testi</string>
+    <string name="stage_complete">Tarama Tamamlandı</string>
+    
+    <!-- İlerleme Detayları -->
+    <string name="progress_collecting_data">Donanım bilgileri toplanıyor…</string>
+    <string name="progress_cpu_test">İşlemci yük altında test ediliyor…</string>
+    <string name="progress_storage_test">Depolama hızı ölçülüyor…</string>
+    <string name="progress_battery_test">Pil sağlığı analiz ediliyor…</string>
+    <string name="progress_finalizing">Sonuçlar tamamlanıyor…</string>
+    
+    <!-- Canlı Değerler -->
+    <string name="cpu_temp">İşlemci Sıcaklığı: %s°C</string>
+    <string name="battery_current">Pil Akımı: %d mA</string>
+    <string name="storage_speed">Depolama Hızı: %.1f MB/s</string>
+    <string name="progress_percent">%d%%</string>
+    
+    <!-- Anket Penceresi -->
+    <string name="survey_title">Doğruluğu Artırmamıza Yardımcı Olun</string>
+    <string name="survey_subtitle">Geri bildiriminiz yapay zeka modelimizi eğitmeye yardımcı olur</string>
+    <string name="survey_skip">Atla</string>
+    <string name="survey_submit">Gönder</string>
+    
+    <!-- Anket Soruları -->
+    <string name="survey_q1">Genel cihaz durumu?</string>
+    <string name="survey_q1_excellent">Mükemmel</string>
+    <string name="survey_q1_very_good">Çok İyi</string>
+    <string name="survey_q1_good">İyi</string>
+    <string name="survey_q1_fair">Orta</string>
+    <string name="survey_q1_poor">Kötü</string>
+    
+    <string name="survey_q2">Değiştirilen bileşenler var mı?</string>
+    <string name="survey_q2_none">Yok</string>
+    <string name="survey_q2_screen">Ekran</string>
+    <string name="survey_q2_battery">Pil</string>
+    <string name="survey_q2_motherboard">Anakart</string>
+    <string name="survey_q2_camera">Kamera</string>
+    <string name="survey_q2_other">Diğer</string>
+    
+    <string name="survey_q3">Cihaz orijinal mi yoksa yenilenmiş mi?</string>
+    <string name="survey_q3_original">%100 Orijinal</string>
+    <string name="survey_q3_official_refurb">Resmi Olarak Yenilenmiş</string>
+    <string name="survey_q3_unofficial_refurb">Gayri Resmi Yenilenmiş</string>
+    <string name="survey_q3_unsure">Emin Değilim</string>
+    
+    <string name="survey_q4">Günlük kullanım yoğunluğu?</string>
+    <string name="survey_q4_light">Hafif</string>
+    <string name="survey_q4_moderate">Orta</string>
+    <string name="survey_q4_heavy">Yoğun</string>
+    
+    <string name="survey_q5">Bilinen sorunlar var mı?</string>
+    <string name="survey_q5_slow">Yavaş Performans</string>
+    <string name="survey_q5_heat">Aşırı Isınma</string>
+    <string name="survey_q5_battery_drain">Pil Tükenmesi</string>
+    <string name="survey_q5_freezing">Uygulama Donması</string>
+    <string name="survey_q5_charging">Şarj Sorunları</string>
+    <string name="survey_q5_none">Yok</string>
+    
+    <string name="survey_q6">Beklenen sağlık skoru (1–100):</string>
+    <string name="survey_q7">Ek notlar (isteğe bağlı):</string>
+    <string name="survey_q7_hint">Cihaz hakkında diğer gözlemler…</string>
+    
+    <!-- Hatalar -->
+    <string name="error_scan_failed">Tarama başarısız. Lütfen tekrar deneyin.</string>
+    <string name="error_no_permission">Gerekli izinler verilmedi</string>
+    <string name="error_network">Ağ hatası. Bağlantınızı kontrol edin.</string>
+    <string name="error_upload_failed">Sonuçlar yüklenemedi</string>
+    <string name="error_unknown">Bilinmeyen bir hata oluştu</string>
+    
+    <!-- Ortak Eylemler -->
+    <string name="retry">Tekrar Dene</string>
+    <string name="cancel">İptal</string>
+    <string name="ok">Tamam</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    
+    <!-- Sonuçlar -->
+    <string name="scan_results">Tarama Sonuçları</string>
+    <string name="health_score">Sağlık Skoru: %d/100</string>
+    <string name="upload_successful">Sonuçlar başarıyla yüklendi</string>
+    
+    <!-- Depolama ve RAM -->
+    <string name="ram_usage">RAM: %1$d MB / %2$d MB</string>
+    <string name="storage_usage">Depolama: %1$.1f GB / %2$.1f GB</string>
+
+    <!-- Labeling Screen -->
+    <string name="overall_health">Genel Sağlık</string>
+    <string name="authenticity">Özgünlük</string>
+    <string name="refurbishment">Yenileme Durumu</string>
+    <string name="usage_intensity">Kullanım Yoğunluğu</string>
+    <string name="replaced_components">Değiştirilen Bileşenler</string>
+    <string name="technician_notes">Teknisyen Notları</string>
+    <string name="submit">Gönder</string>
+    <string name="error_upload">Yükleme Başarısız</string>
+
+    <!-- Authenticity Options -->
+    <string name="auth_genuine">Orijinal</string>
+    <string name="auth_suspicious">Şüpheli</string>
+    <string name="auth_fake">Sahte</string>
+
+    <!-- Refurbishment Options -->
+    <string name="refurb_original">Orijinal</string>
+    <string name="refurb_minor">Küçük Onarım</string>
+    <string name="refurb_refurbished">Yenilenmiş</string>
+
+    <!-- Usage Intensity Options -->
+    <string name="usage_light">Hafif</string>
+    <string name="usage_moderate">Orta</string>
+    <string name="usage_heavy">Yoğun</string>
+
+    <!-- Component Options -->
+    <string name="component_battery">Pil</string>
+    <string name="component_screen">Ekran</string>
+    <string name="component_camera">Kamera</string>
+    <string name="back_to_home">Ana Sayfaya Dön</string>
+    <string name="battery_test">Pil Testi</string>
+    <string name="camera">Kamera</string>
+    <string name="collecting_data">Veri Toplanıyor</string>
+    <string name="complete">Tamamlandı</string>
+    <string name="cpu_test">İşlemci Testi</string>
+    <string name="language">Dil</string>
+    <string name="screen">Ekran</string>
+    <string name="storage_test">Depolama Testi</string>
+    <string name="stress_testing">Stres Testi</string>
+    <string name="success_upload">Başarıyla Yüklendi</string>
+    <string name="initializing">Başlatılıyor…</string>
+</resources>

@@ -1,0 +1,156 @@
+PROPRIETARY SOFTWARE LICENSE AGREEMENT
+=======================================
+
+Copyright (c) 2025 Hasan Oso. All Rights Reserved.
+
+Student ID: 230212925
+Institution: OSTİM Technical University - AI Engineering Department
+Project: DiagnosticApp - AI-Powered Device Health Analysis
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. DEFINITIONS
+
+"Software" refers to the DiagnosticApp application, including but not limited
+to all source code, object code, algorithms, data models, machine learning
+components, documentation, data collection methodologies, stress testing
+algorithms, battery analysis techniques, and any associated materials
+contained in this repository.
+
+"Owner" refers to Hasan Oso (Student ID: 230212925), the sole creator and
+rights holder of the Software.
+
+"You" refers to any person or entity accessing, viewing, or interacting with
+the Software or this repository.
+
+2. GRANT OF RIGHTS
+
+NO rights are granted under this license. This Software is the exclusive
+property of the Owner. All rights, title, and interest in and to the
+Software, including all intellectual property rights, are and shall remain
+with the Owner.
+
+3. RESTRICTIONS
+
+You may NOT, under any circumstances:
+
+  a) Use the Software or any part thereof for any purpose, whether commercial,
+     academic, or personal, without prior written consent from the Owner.
+
+  b) Copy, reproduce, duplicate, or replicate the Software or any portion
+     thereof, in whole or in part.
+
+  c) Modify, adapt, translate, reverse engineer, decompile, disassemble, or
+     create derivative works based on the Software.
+
+  d) Distribute, sublicense, lease, rent, loan, sell, or otherwise transfer
+     the Software or any rights therein to any third party.
+
+  e) Remove, alter, or obscure any proprietary notices, labels, marks, or
+     copyright notices on or in the Software.
+
+  f) Use the Software to train, develop, or improve any competing product,
+     service, or machine learning model.
+
+  g) Incorporate any part of the Software into another product or service.
+
+  h) Use the algorithms, data structures, or methodologies described in the
+     Software for any purpose without explicit authorization.
+
+4. ACADEMIC USE EXCEPTION
+
+This Software was developed as part of an academic project at OSTİM Technical
+University. Viewing of the source code by authorized university faculty and
+examination committees is permitted solely for academic evaluation purposes.
+No other use, including academic research or teaching, is authorized without
+the Owner's written consent.
+
+5. INTELLECTUAL PROPERTY
+
+The Software contains proprietary algorithms and methodologies, including but
+not limited to:
+
+  - Multi-source battery capacity estimation algorithms
+  - Hybrid voltage monitoring and synthetic voltage calculation
+  - Adaptive stress test configuration based on device profiling
+  - Device age forensic estimation using multi-vector analysis
+  - Data quality scoring for machine learning dataset curation
+  - Samsung/Xiaomi OEM serial number decoding techniques
+
+These algorithms constitute trade secrets and proprietary intellectual
+property of the Owner.
+
+6. DATA RIGHTS
+
+All data collected, generated, processed, or derived through the use of this
+Software, including but not limited to device diagnostic data, battery health
+metrics, stress test results, and machine learning training datasets, is the
+exclusive property of the Owner.
+
+7. WARRANTY DISCLAIMER
+
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+8. LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL THE OWNER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING
+FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+9. ENFORCEMENT AND PENALTIES
+
+Any unauthorized use, copying, modification, distribution, or other violation
+of this license agreement shall be subject to:
+
+  a) Immediate legal action under applicable copyright, trade secret, and
+     intellectual property laws.
+
+  b) Civil damages including, but not limited to, actual damages, statutory
+     damages, lost profits, and attorney's fees.
+
+  c) Criminal prosecution under Turkish Intellectual Property Law No. 5846
+     (Fikir ve Sanat Eserleri Kanunu) and relevant international treaties.
+
+  d) Injunctive relief to prevent further unauthorized use or distribution.
+
+  e) Claims under the Berne Convention for the Protection of Literary and
+     Artistic Works and the TRIPS Agreement.
+
+10. GOVERNING LAW
+
+This license agreement shall be governed by and construed in accordance with
+the laws of the Republic of Turkey. Any disputes arising under this agreement
+shall be subject to the exclusive jurisdiction of the courts of Ankara, Turkey.
+
+11. SEVERABILITY
+
+If any provision of this license is held to be unenforceable or invalid, such
+provision shall be changed and interpreted to accomplish the objectives of
+such provision to the greatest extent possible under applicable law, and the
+remaining provisions shall continue in full force and effect.
+
+12. ENTIRE AGREEMENT
+
+This license constitutes the entire agreement between the parties with respect
+to the Software and supersedes all prior or contemporaneous understandings or
+agreements, whether written or oral, regarding the Software.
+
+13. CONTACT FOR LICENSING
+
+For commercial licensing inquiries, academic collaboration requests, or
+partnership proposals, contact:
+
+  Owner: Hasan Oso
+  Email: [your-email]
+  LinkedIn: [your-linkedin]
+  Institution: OSTİM Technical University
+  Department: AI Engineering
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+© 2025 Hasan Oso. ALL RIGHTS RESERVED.
+Unauthorized use is strictly prohibited and will be prosecuted
+to the fullest extent of the law.
