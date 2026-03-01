@@ -8,72 +8,85 @@
  * 
  * Owner: Hasan Oso
  * Student ID: 230212925
- * Institution: OST?M Technical University
+ * Institution: OSTIM Technical University
  */
 package com.diagnostics.app.data.collectors
 
 import android.content.Context
-import android.hardware.display.DisplayManager
 import android.os.Build
-import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Display
 import android.view.WindowManager
 
 class DisplayCollector(private val context: Context) {
-    
+
     fun collectDisplayData(): DisplayData {
-        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            context.display ?: windowManager.defaultDisplay
-        } else {
-            @Suppress("DEPRECATION")
-            windowManager.defaultDisplay
-        }
-        
-        val metrics = DisplayMetrics()
-        @Suppress("DEPRECATION")
-        display?.getRealMetrics(metrics)
-        
-        return DisplayData(
-            screenWidthPx = metrics.widthPixels,
-            screenHeightPx = metrics.heightPixels,
-            screenDensityDpi = metrics.densityDpi,
-            screenRefreshRateHz = display?.refreshRate ?: 60f,
-            screenRefreshRatesSupported = getSupportedRefreshRates(display),
-            displayHdrCapabilities = getHdrCapabilities(display),
-            wideColorGamutSupport = checkWideColorGamut(display),
-            screenBrightnessMode = "AUTO" // Placeholder, requires Settings permission
-        )
-    }
-    
-    private fun getSupportedRefreshRates(display: Display?): List<Float> {
         return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && display != null) {
-                display.supportedModes.map { it.refreshRate }.distinct().sorted()
+            val metrics = context.resources.displayMetrics
+            DisplayData(
+                screenWidthPx = metrics.widthPixels,
+                screenHeightPx = metrics.heightPixels,
+                screenDensityDpi = metrics.densityDpi,
+                screenRefreshRateHz = getRefreshRateSafe(),
+                screenRefreshRatesSupported = getSupportedRefreshRatesSafe(),
+                displayHdrCapabilities = getHdrCapabilitiesSafe(),
+                wideColorGamutSupport = checkWideColorGamutSafe(),
+                screenBrightnessMode = "AUTO"
+            )
+        } catch (e: Exception) {
+            Log.e("DisplayCollector", "Error collecting display info", e)
+            getDefaultDisplayData()
+        }
+    }
+
+    private fun getRefreshRateSafe(): Float {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+                @Suppress("DEPRECATION")
+                windowManager?.defaultDisplay?.refreshRate ?: 60f
             } else {
-                listOf(display?.refreshRate ?: 60f)
+                60f
+            }
+        } catch (e: Exception) {
+            60f
+        }
+    }
+
+    private fun getSupportedRefreshRatesSafe(): List<Float> {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+                @Suppress("DEPRECATION")
+                windowManager?.defaultDisplay?.supportedModes
+                    ?.map { it.refreshRate }?.distinct()?.sorted()
+                    ?: listOf(60f)
+            } else {
+                listOf(60f)
             }
         } catch (e: Exception) {
             listOf(60f)
         }
     }
-    
-    private fun getHdrCapabilities(display: Display?): List<String> {
+
+    private fun getHdrCapabilitiesSafe(): List<String> {
         return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && display != null) {
-                val hdrCapabilities = display.hdrCapabilities
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+                @Suppress("DEPRECATION")
+                val display = windowManager?.defaultDisplay
                 val types = mutableListOf<String>()
-                
-                hdrCapabilities?.supportedHdrTypes?.forEach { type ->
-                    types.add(when (type) {
-                        Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION -> "DOLBY_VISION"
-                        Display.HdrCapabilities.HDR_TYPE_HDR10 -> "HDR10"
-                        Display.HdrCapabilities.HDR_TYPE_HLG -> "HLG"
-                        Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS -> "HDR10_PLUS"
-                        else -> "UNKNOWN_$type"
-                    })
+                display?.hdrCapabilities?.supportedHdrTypes?.forEach { type ->
+                    types.add(
+                        when (type) {
+                            Display.HdrCapabilities.HDR_TYPE_DOLBY_VISION -> "DOLBY_VISION"
+                            Display.HdrCapabilities.HDR_TYPE_HDR10        -> "HDR10"
+                            Display.HdrCapabilities.HDR_TYPE_HLG          -> "HLG"
+                            Display.HdrCapabilities.HDR_TYPE_HDR10_PLUS   -> "HDR10_PLUS"
+                            else                                           -> "UNKNOWN_$type"
+                        }
+                    )
                 }
-                
                 types
             } else {
                 emptyList()
@@ -82,11 +95,13 @@ class DisplayCollector(private val context: Context) {
             emptyList()
         }
     }
-    
-    private fun checkWideColorGamut(display: Display?): Boolean {
+
+    private fun checkWideColorGamutSafe(): Boolean {
         return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && display != null) {
-                display.isWideColorGamut
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+                @Suppress("DEPRECATION")
+                windowManager?.defaultDisplay?.isWideColorGamut ?: false
             } else {
                 false
             }
@@ -94,7 +109,20 @@ class DisplayCollector(private val context: Context) {
             false
         }
     }
-    
+
+    private fun getDefaultDisplayData(): DisplayData {
+        return DisplayData(
+            screenWidthPx = 1080,
+            screenHeightPx = 2400,
+            screenDensityDpi = 420,
+            screenRefreshRateHz = 60f,
+            screenRefreshRatesSupported = listOf(60f),
+            displayHdrCapabilities = emptyList(),
+            wideColorGamutSupport = false,
+            screenBrightnessMode = "AUTO"
+        )
+    }
+
     data class DisplayData(
         val screenWidthPx: Int,
         val screenHeightPx: Int,
