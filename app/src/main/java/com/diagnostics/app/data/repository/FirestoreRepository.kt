@@ -21,6 +21,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class FirestoreRepository {
     
@@ -61,8 +65,14 @@ class FirestoreRepository {
      * Structured as nested maps for Firestore subcollections.
      */
     private fun createCompleteScanMap(s: DeviceScanData): Map<String, Any?> {
+        // Human-readable date for easy identification in Firebase Console
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+        dateFormat.timeZone = TimeZone.getTimeZone("Asia/Istanbul")
+        val readableDate = dateFormat.format(Date(s.scanTimestamp))
+
         return mapOf(
             // ══════════ METADATA ══════════
+            "scan_date_readable" to readableDate,
             "scan_id" to s.scanId,
             "scan_timestamp" to s.scanTimestamp,
             "scan_duration_seconds" to s.scanDurationSeconds,
