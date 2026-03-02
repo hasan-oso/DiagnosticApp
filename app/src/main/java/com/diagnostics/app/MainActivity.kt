@@ -8,7 +8,7 @@
  * 
  * Owner: Hasan Oso
  * Student ID: 230212925
- * Institution: OST?M Technical University
+ * Institution: OSTIM Technical University
  */
 package com.diagnostics.app
 
@@ -28,10 +28,11 @@ import com.diagnostics.app.ui.screens.*
 import com.diagnostics.app.ui.theme.DiagnosticTheme
 import com.diagnostics.app.utils.LanguageManager
 import com.diagnostics.app.utils.PermissionHandler
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.diagnostics.app.viewmodel.AuthViewModel
+import com.diagnostics.app.viewmodel.AuthState
 
 class MainActivity : AppCompatActivity() {
     private lateinit var languageManager: LanguageManager
@@ -43,11 +44,17 @@ class MainActivity : AppCompatActivity() {
         languageManager = LanguageManager(this)
         permissionHandler = PermissionHandler(this)
         
-        languageManager = LanguageManager(this)
-        permissionHandler = PermissionHandler(this)
-        
         setContent {
             val currentLanguage by languageManager.currentLanguage.collectAsState(initial = "en")
+            val authViewModel: AuthViewModel = viewModel()
+            val authState by authViewModel.authState.collectAsState()
+            
+            // Determine start destination based on auth state
+            val startDestination = when (authState) {
+                is AuthState.Authenticated -> "home"
+                is AuthState.Guest -> "home"
+                is AuthState.Unauthenticated -> "welcome"
+            }
             
             DiagnosticTheme {
                 Surface(
@@ -58,13 +65,48 @@ class MainActivity : AppCompatActivity() {
                     
                     NavHost(
                         navController = navController,
-                        startDestination = "home"
+                        startDestination = startDestination
                     ) {
-                            // Log current route
-                            
-
+                        // ══════ Auth Flow ══════
+                        composable("welcome") {
+                            WelcomeScreen(
+                                onLoginClick = { navController.navigate("login") },
+                                onRegisterClick = { navController.navigate("register") },
+                                onGuestClick = {
+                                    authViewModel.continueAsGuest()
+                                    navController.navigate("home") {
+                                        popUpTo("welcome") { inclusive = true }
+                                    }
+                                }
+                            )
+                        }
+                        
+                        composable("login") {
+                            LoginScreen(
+                                onLoginSuccess = {
+                                    navController.navigate("home") {
+                                        popUpTo("welcome") { inclusive = true }
+                                    }
+                                },
+                                onBackClick = { navController.popBackStack() },
+                                authViewModel = authViewModel
+                            )
+                        }
+                        
+                        composable("register") {
+                            RegisterScreen(
+                                onRegisterSuccess = {
+                                    navController.navigate("home") {
+                                        popUpTo("welcome") { inclusive = true }
+                                    }
+                                },
+                                onBackClick = { navController.popBackStack() },
+                                authViewModel = authViewModel
+                            )
+                        }
+                        
+                        // ══════ Main App Flow ══════
                         composable("home") {
-                            // Log current route
                             LaunchedEffect(navController.currentBackStackEntry) {
                                 val route = navController.currentBackStackEntry?.destination?.route
                             }
