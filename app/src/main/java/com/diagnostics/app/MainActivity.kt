@@ -33,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.diagnostics.app.viewmodel.AuthViewModel
 import com.diagnostics.app.viewmodel.AuthState
+import com.diagnostics.app.viewmodel.SharedScanViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var languageManager: LanguageManager
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
             val currentLanguage by languageManager.currentLanguage.collectAsState(initial = "en")
             val authViewModel: AuthViewModel = viewModel()
             val authState by authViewModel.authState.collectAsState()
+            val sharedScanViewModel: SharedScanViewModel = viewModel()
             
             // Determine start destination based on auth state
             val startDestination = when (authState) {
@@ -107,10 +109,6 @@ class MainActivity : AppCompatActivity() {
                         
                         // ══════ Main App Flow ══════
                         composable("home") {
-                            LaunchedEffect(navController.currentBackStackEntry) {
-                                val route = navController.currentBackStackEntry?.destination?.route
-                            }
-
                             HomeScreen(
                                 currentLanguage = currentLanguage,
                                 onLanguageChange = { lang ->
@@ -138,6 +136,8 @@ class MainActivity : AppCompatActivity() {
                         composable("scanning") {
                             ScanningScreen(
                                 onScanComplete = { scanData ->
+                                    // Store scan data in shared ViewModel
+                                    sharedScanViewModel.setScanData(scanData)
                                     navController.navigate("labeling/${scanData.scanId}")
                                 }
                             )
@@ -148,13 +148,42 @@ class MainActivity : AppCompatActivity() {
                             LabelingScreen(
                                 scanId = scanId,
                                 onComplete = {
-                                    navController.navigate("result") {
+                                    navController.navigate("report") {
                                         popUpTo("home") { inclusive = false }
                                     }
                                 }
                             )
                         }
                         
+                        // ══════ Report Screen (NEW) ══════
+                        composable("report") {
+                            val scanData by sharedScanViewModel.scanData.collectAsState()
+                            
+                            scanData?.let { data ->
+                                ReportScreen(
+                                    scanData = data,
+                                    shopInfo = (authState as? AuthState.Authenticated)
+                                        ?.account?.shopInfo,
+                                    onBackClick = {
+                                        sharedScanViewModel.clearScanData()
+                                        navController.navigate("home") {
+                                            popUpTo("home") { inclusive = true }
+                                        }
+                                    }
+                                )
+                            } ?: run {
+                                // Fallback: no scan data available
+                                ResultScreen(
+                                    onBackToHome = {
+                                        navController.navigate("home") {
+                                            popUpTo("home") { inclusive = true }
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                        
+                        // Keep old result route for backward compat
                         composable("result") {
                             ResultScreen(
                                 onBackToHome = {

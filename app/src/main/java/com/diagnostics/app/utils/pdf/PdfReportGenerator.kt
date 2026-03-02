@@ -66,9 +66,10 @@ class PdfReportGenerator(
             val fontStream = context.assets.open("fonts/NotoSansArabic-Regular.ttf")
             val fontBytes = fontStream.readBytes()
             fontStream.close()
-            PdfFontFactory.createFont(fontBytes, PdfEncodings.IDENTITY_H, true)
+            PdfFontFactory.createFont(fontBytes, PdfEncodings.IDENTITY_H,
+                PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED)
         } catch (e: Exception) {
-            PdfFontFactory.createFont("Helvetica")
+            PdfFontFactory.createFont(com.itextpdf.io.font.constants.StandardFonts.HELVETICA)
         }
     }
 
