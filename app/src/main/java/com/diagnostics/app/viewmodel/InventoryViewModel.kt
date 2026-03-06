@@ -147,7 +147,7 @@ class InventoryViewModel(application: Application) : AndroidViewModel(applicatio
                 overallScore = score,
                 scanDate = System.currentTimeMillis(),
                 purchasePrice = purchasePrice,
-                batteryHealth = scanData.batteryStressResult?.estimatedHealthPercent ?: 0,
+                batteryHealth = scanData.batteryStressResult?.estimatedHealthPercent?.let { if (it >= 0) it else 0 } ?: 0,
                 storageTotalGb = scanData.storageTotalGb,
                 ramTotalMb = scanData.ramTotalMb,
                 androidVersion = scanData.androidVersion

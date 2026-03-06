@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.diagnostics.app.data.models.DeviceScanData
+import com.diagnostics.app.utils.scoring.ScoreCalculator
 import androidx.compose.ui.res.stringResource
 import com.diagnostics.app.R
 
@@ -243,9 +244,9 @@ fun CardRow(label: String, value: String, valueColor: Color = Color.White) {
 fun BatteryCard(data: DeviceScanData) {
     val health = data.batteryStressResult.estimatedHealthPercent
     val degradation = data.batteryStressResult.capacityMetrics?.degradationPercent ?: 0f
-    
+
     InfoCard(title = stringResource(R.string.battery_label), icon = "🔋") {
-        CardRow("Health", "$health%", if (health > 80) AppAccent else Color.Yellow)
+        CardRow("Health", if (health >= 0) "$health%" else "N/A", if (health > 80) AppAccent else Color.Yellow)
         CardRow("Design Capacity", "${data.batteryDesignCapacityMah} mAh")
         CardRow("Degradation", String.format("%.1f%%", degradation))
     }
@@ -370,23 +371,5 @@ fun BottomActions(
 }
 
 fun calculateOverallScore(data: DeviceScanData): Float {
-    // A simplified scoring logic based on critical metrics
-    var score = 100f
-    
-    // Battery degradation penalty
-    val deg = data.batteryStressResult.capacityMetrics?.degradationPercent ?: 0f
-    score -= (deg * 0.5f)
-    
-    // Thermal penalty
-    val throttling = data.cpuStressResult.performanceDegradationPercent
-    if (throttling > 10f) {
-        score -= (throttling * 0.5f)
-    }
-    
-    // Storage penalty
-    if (data.storageStressResult.sequentialReadMbps < 200f) {
-        score -= 5f
-    }
-    
-    return score
+    return ScoreCalculator().calculateOverallScore(data).overall.toFloat()
 }

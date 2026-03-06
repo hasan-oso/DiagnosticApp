@@ -135,7 +135,7 @@ class DataCollectionRepository(private val context: Context) {
             writeSpeedCurve = emptyList()
         )
         
-        // 3. Battery Stress Test (Placeholder)
+        // 3. Battery Stress Test (Placeholder — replaced by ScanViewModel stress tests)
         val batteryStressResult = BatteryStressResult(
             durationSeconds = 0,
             initialVoltageMv = 0,
@@ -143,7 +143,7 @@ class DataCollectionRepository(private val context: Context) {
             voltageSagMv = 0,
             peakCurrentMa = 0,
             internalResistanceMohm = 0f,
-            estimatedHealthPercent = 0,
+            estimatedHealthPercent = -1, // -1 = not yet tested (placeholder)
             voltageReadings = emptyList()
         )
         

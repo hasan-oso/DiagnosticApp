@@ -39,6 +39,7 @@ import com.diagnostics.app.data.models.TempReading
 import com.diagnostics.app.data.models.VoltageReading
 import com.diagnostics.app.data.models.auth.ShopInfo
 import com.diagnostics.app.utils.language.LocalStrings
+import com.diagnostics.app.utils.scoring.ScoreCalculator
 import com.diagnostics.app.viewmodel.InventoryViewModel
 import kotlinx.coroutines.launch
 
@@ -62,11 +63,8 @@ fun ReportScreen(
     val context = LocalContext.current
     val strings = LocalStrings.current
     val coroutineScope = rememberCoroutineScope()
-    val batteryScore = scanData.batteryStressResult.estimatedHealthPercent.toFloat()
-    val perfScore = (100f - scanData.cpuStressResult.performanceDegradationPercent).coerceIn(0f, 100f)
-    val storageScore = if (scanData.storageStressResult.sequentialReadMbps > 200f) 90f else 60f
-    val ageScore = (100f - (scanData.deviceAgeYears * 10f)).coerceIn(0f, 100f)
-    val overallScore = (batteryScore * 0.35f + perfScore * 0.25f + storageScore * 0.20f + ageScore * 0.20f)
+    val deviceScore = remember(scanData) { ScoreCalculator().calculateOverallScore(scanData) }
+    val overallScore = deviceScore.overall.toFloat()
 
     var isVisible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { isVisible = true }
@@ -347,7 +345,7 @@ fun BatterySection(data: DeviceScanData) {
     val battery = data.batteryStressResult
     ReportCard(stringResource(R.string.battery_section)) {
         DetailRow("Health Status", battery.batteryHealthStatus)
-        DetailRow("Estimated Health", "${battery.estimatedHealthPercent}%")
+        DetailRow("Estimated Health", if (battery.estimatedHealthPercent >= 0) "${battery.estimatedHealthPercent}%" else "N/A")
         DetailRow("Design Capacity", "${data.batteryDesignCapacityMah} mAh")
         DetailRow("Degradation", String.format("%.1f%%", battery.capacityMetrics?.degradationPercent ?: 0f))
         DetailRow("Internal Resistance", "${battery.internalResistanceMohm} mΩ")

@@ -171,7 +171,8 @@ class PdfReportGenerator(
         val degradation = scanData.batteryStressResult.capacityMetrics?.degradationPercent
         val degradationText = if (degradation != null && degradation > 0) "${String.format(Locale.US, "%.1f", degradation)}%" else strings.notAvailable
 
-        bY = drawKeyValue(canvas, "Health", "$batteryHealth%", col1X, bY, labelPaint, valuePaint, isRtl)
+        val batteryHealthText = if (batteryHealth >= 0) "$batteryHealth%" else strings.notAvailable
+        bY = drawKeyValue(canvas, "Health", batteryHealthText, col1X, bY, labelPaint, valuePaint, isRtl)
         bY = drawKeyValue(canvas, "Capacity", "${batteryCap}mAh", col1X, bY, labelPaint, valuePaint, isRtl)
         bY = drawKeyValue(canvas, "Degradation", degradationText, col1X, bY, labelPaint, valuePaint, isRtl)
 
