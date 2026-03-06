@@ -25,6 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.diagnostics.app.data.collectors.PreflightChecker
 import com.diagnostics.app.data.collectors.StressTestEngine
 import com.diagnostics.app.data.models.DeviceScanData
+import com.diagnostics.app.benchmark.QuickBenchmark
 import com.diagnostics.app.data.repository.DataCollectionRepository
 import com.diagnostics.app.services.StressTestService
 
@@ -141,7 +142,8 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
                             },
                             context = context,
                             deviceAgeYears = scanData.deviceAgeYears,
-                            designCapacityMah = scanData.batteryDesignCapacityMah
+                            designCapacityMah = scanData.batteryDesignCapacityMah,
+                            devicePerformanceTier = scanData.devicePerformanceTier
                         )
                     }
                 } catch (e: TimeoutCancellationException) {
@@ -153,44 +155,48 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
                 Log.d(TAG, "Starting CPU stress test...")
                 stressTestService?.updateProgress("Running CPU stress test...", 40)
                 val cpuResult = try {
-                    withTimeout(CPU_TIMEOUT_MS) {
-                        stressTestEngine.runCpuStressTest(
-                            onProgress = { progress ->
-                                _scanState.value = ScanState.StressTesting(progress, 0.0f, 1.0f)
-                                stressTestService?.updateProgress(
-                                    "CPU test: ${(progress * 100).toInt()}%",
-                                    40 + (progress * 30).toInt()
-                                )
-                            },
-                            quickBenchmarkScore = scanData.quickBenchmarkScore,
-                            deviceAgeYears = scanData.deviceAgeYears
-                        )
-                    }
-                } catch (e: TimeoutCancellationException) {
-                    Log.w(TAG, "CPU stress test TIMED OUT after ${CPU_TIMEOUT_MS/1000}s")
+                    stressTestEngine.runCpuStressTest(
+                        onProgress = { progress ->
+                            _scanState.value = ScanState.StressTesting(progress, 0.0f, 1.0f)
+                            stressTestService?.updateProgress(
+                                "CPU test: ${(progress * 100).toInt()}%",
+                                40 + (progress * 30).toInt()
+                            )
+                        },
+                        quickBenchmarkScore = scanData.quickBenchmarkScore,
+                        deviceAgeYears = scanData.deviceAgeYears,
+                        devicePerformanceTier = scanData.devicePerformanceTier
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "CPU test failed completely: ${e.message}", e)
                     null
                 }
+
+                Log.d(TAG, "CPU result: iterations=${cpuResult?.cpuTestIterations}, null=${cpuResult == null}")
 
                 // Storage Stress Test
                 Log.d(TAG, "Starting Storage stress test...")
                 stressTestService?.updateProgress("Running storage stress test...", 70)
                 val storageResult = try {
-                    withTimeout(STORAGE_TIMEOUT_MS) {
-                        stressTestEngine.runStorageStressTest { progress ->
-                            _scanState.value = ScanState.StressTesting(1.0f, progress, 1.0f)
-                            stressTestService?.updateProgress(
-                                "Storage test: ${(progress * 100).toInt()}%",
-                                70 + (progress * 20).toInt()
-                            )
-                        }
+                    stressTestEngine.runStorageStressTest(
+                        devicePerformanceTier = scanData.devicePerformanceTier
+                    ) { progress ->
+                        _scanState.value = ScanState.StressTesting(1.0f, progress, 1.0f)
+                        stressTestService?.updateProgress(
+                            "Storage test: ${(progress * 100).toInt()}%",
+                            70 + (progress * 20).toInt()
+                        )
                     }
-                } catch (e: TimeoutCancellationException) {
-                    Log.w(TAG, "Storage stress test TIMED OUT after ${STORAGE_TIMEOUT_MS/1000}s")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Storage test failed completely: ${e.message}", e)
                     null
                 }
 
                 // Step 5: Merge stress results into scan data
-                stressTestService?.updateProgress("Finalizing results...", 95)
+                // Adaptive Stress Info
+                val actualCpuIterations = cpuResult?.cpuTestIterations ?: 0L
+                val cpuDuration = cpuResult?.durationSeconds ?: 1
+
                 val scanEndTime = System.currentTimeMillis()
                 val totalDurationSeconds = ((scanEndTime - scanData.scanTimestamp) / 1000).toInt()
 
@@ -200,28 +206,34 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
                     batteryStressResult = batteryResult ?: scanData.batteryStressResult,
                     scanDurationSeconds = totalDurationSeconds,
 
-                    // Adaptive Stress Info
-                    quickBenchmarkScore = cpuResult?.quickBenchmarkScore ?: scanData.quickBenchmarkScore,
-                    devicePerformanceTier = cpuResult?.devicePerformanceTier ?: scanData.devicePerformanceTier,
+                    quickBenchmarkScore = QuickBenchmark.calculateNormalizedScore(
+                        cpuTestIterations = actualCpuIterations,
+                        scanDurationSeconds = cpuDuration,
+                        cpuMaxFreqMhz = scanData.cpuMaxFreqMhz,
+                        ramTotalMb = scanData.ramTotalMb.toInt()
+                    ),
+                    devicePerformanceTier = scanData.devicePerformanceTier,
                     cpuTestIterations = cpuResult?.cpuTestIterations ?: scanData.cpuTestIterations,
                     storageTestFileCount = storageResult?.storageTestFileCount ?: scanData.storageTestFileCount,
 
                     // Precise battery drain (from BatteryStressResult)
                     actualDrainMah = batteryResult?.actualDrainMah ?: scanData.actualDrainMah,
-                    actualDrainPercent = batteryResult?.actualDrainPercent ?: scanData.actualDrainPercent,
-                    chargeCounterStartUah = batteryResult?.chargeCounterStartUah ?: scanData.chargeCounterStartUah,
-                    chargeCounterEndUah = batteryResult?.chargeCounterEndUah ?: scanData.chargeCounterEndUah,
-                    batteryTempStartCelsius = batteryResult?.batteryTempStartCelsius ?: scanData.batteryTempStartCelsius,
-                    batteryTempEndCelsius = batteryResult?.batteryTempEndCelsius ?: scanData.batteryTempEndCelsius,
-                    batteryCycleCount = batteryResult?.batteryCycleCount ?: scanData.batteryCycleCount,
-                    batteryHealthStatus = batteryResult?.batteryHealthStatus ?: scanData.batteryHealthStatus,
-                    batteryDrainPercent = batteryResult?.batteryDrainPercent ?: scanData.batteryDrainPercent,
-                    batteryDrainRatePerMinute = batteryResult?.batteryDrainRatePerMinute ?: scanData.batteryDrainRatePerMinute,
-                    batteryLevelStart = batteryResult?.batteryLevelStart ?: scanData.batteryLevelStart,
-                    batteryLevelEnd = batteryResult?.batteryLevelEnd ?: scanData.batteryLevelEnd,
-                    isChargingStart = batteryResult?.isChargingStart ?: scanData.isChargingStart,
-                    isChargingEnd = batteryResult?.isChargingEnd ?: scanData.isChargingEnd,
-                    chargingDetectedMidTest = batteryResult?.chargingDetectedMidTest ?: scanData.chargingDetectedMidTest
+                    actualDrainPercent = scanData.actualDrainPercent,
+                    chargeCounterStartUah = scanData.chargeCounterStartUah,
+                    chargeCounterEndUah = scanData.chargeCounterEndUah,
+                    batteryTempStartCelsius = scanData.batteryTempStartCelsius,
+                    batteryTempEndCelsius = scanData.batteryTempEndCelsius,
+                    batteryCycleCount = scanData.batteryCycleCount,
+                    batteryHealthStatus = scanData.batteryHealthStatus,
+                    batteryDrainPercent = scanData.batteryDrainPercent,
+                    batteryDrainRatePerMinute = scanData.batteryDrainRatePerMinute,
+                    batteryLevelStart = scanData.batteryLevelStart,
+                    batteryLevelEnd = scanData.batteryLevelEnd,
+                    isChargingStart = scanData.isChargingStart,
+                    isChargingEnd = scanData.isChargingEnd,
+                    chargingDetectedMidTest = scanData.chargingDetectedMidTest,
+                    isChargingDuringScan = scanData.isChargingStart || scanData.isChargingEnd || scanData.chargingDetectedMidTest,
+                    data_collection_metadata = scanData.data_collection_metadata
                 )
 
                 // Step 6: Score data quality
@@ -238,6 +250,14 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
 
                 // Always save locally as backup
                 saveScanDataLocally(scanData)
+
+                // Upload to Firestore (with offline queue)
+                try {
+                    dataCollectionRepo.uploadScanData(scanData)
+                    Log.d(TAG, "Upload queued successfully")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Upload failed, data saved locally: ${e.message}")
+                }
 
                 stressTestService?.updateProgress("Scan complete!", 100)
                 _scanState.value = ScanState.Complete(scanData)
@@ -339,3 +359,4 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
         super.onCleared()
     }
 }
+

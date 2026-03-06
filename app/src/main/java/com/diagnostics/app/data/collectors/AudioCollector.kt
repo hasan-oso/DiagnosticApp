@@ -8,7 +8,7 @@
  * 
  * Owner: Hasan Oso
  * Student ID: 230212925
- * Institution: OST?M Technical University
+ * Institution: OSTİM Technical University
  */
 package com.diagnostics.app.data.collectors
 
@@ -18,140 +18,150 @@ import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
-import android.media.AudioTrack
+import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.util.Log
 import androidx.core.content.ContextCompat
+import com.diagnostics.app.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import kotlin.math.abs
 import kotlin.math.sqrt
 
 class AudioCollector(private val context: Context) {
-    
+
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    
+
     suspend fun collectAudioData(): AudioData = withContext(Dispatchers.IO) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
-            != PackageManager.PERMISSION_GRANTED) {
-            Log.w("AudioCollector", "RECORD_AUDIO permission not granted")
-            return@withContext AudioData(
-                speakerWorking = false,
-                microphoneWorking = false,
-                audioTestPassed = false,
-                speakerVolume = 0,
-                micSensitivity = 0f,
-                errorMessage = "Permission denied"
-            )
-        }
-        
-        try {
-            performAudioLoopbackTest()
-        } catch (e: Exception) {
-            Log.e("AudioCollector", "Audio test failed", e)
+        val hasRecordPermission = ContextCompat.checkSelfPermission(
+            context, Manifest.permission.RECORD_AUDIO
+        ) == PackageManager.PERMISSION_GRANTED
+
+        return@withContext if (hasRecordPermission) {
+            // Full loopback test: play beep + record simultaneously
+            runLoopbackTest()
+        } else {
+            // No mic permission — only test speaker (play beep, check no exception)
+            val speakerOk = testSpeakerOnly()
+            Log.w("AudioCollector", "RECORD_AUDIO not granted — mic test skipped")
             AudioData(
-                speakerWorking = false,
+                speakerWorking = speakerOk,
                 microphoneWorking = false,
-                audioTestPassed = false,
+                audioTestPassed = speakerOk,
                 speakerVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC),
                 micSensitivity = 0f,
-                errorMessage = e.message ?: "Unknown error"
+                errorMessage = "RECORD_AUDIO permission not granted"
             )
         }
     }
-    
-    private suspend fun performAudioLoopbackTest(): AudioData {
-        val sampleRate = 44100
-        // We will rely on RMS (volume) detection since we are using a complex audio file (beep)
-        // rather than a pure sine wave, making simple frequency detection less reliable without FFT.
-        
-        // Save original volume
+
+    /**
+     * Plays beep_01a.mp3 through speaker and simultaneously records with
+     * the microphone. If the mic captures audio above the RMS threshold,
+     * both speaker and microphone are declared working.
+     */
+    private suspend fun runLoopbackTest(): AudioData {
         val originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
         val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-        
-        var mediaPlayer: android.media.MediaPlayer? = null
-        
-        try {
-            // Set volume to 80% for test to ensure microphone picks it up
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (maxVolume * 0.8).toInt(), 0)
-            
-            // Initialize AudioRecord (Microphone)
-            val bufferSize = AudioRecord.getMinBufferSize(
-                sampleRate,
-                AudioFormat.CHANNEL_IN_MONO,
-                AudioFormat.ENCODING_PCM_16BIT
-            )
-            
-            val audioRecord = AudioRecord(
+
+        // Raise volume to 75% so the mic can clearly pick up the beep
+        audioManager.setStreamVolume(
+            AudioManager.STREAM_MUSIC,
+            (maxVolume * 0.75).toInt().coerceAtLeast(1),
+            0
+        )
+
+        val sampleRate = 44100
+        val bufferSize = AudioRecord.getMinBufferSize(
+            sampleRate,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT
+        ).takeIf { it > 0 } ?: return AudioData(
+            speakerWorking = false,
+            microphoneWorking = false,
+            audioTestPassed = false,
+            speakerVolume = originalVolume,
+            micSensitivity = 0f,
+            errorMessage = "AudioRecord buffer error"
+        )
+
+        var mediaPlayer: MediaPlayer? = null
+        var audioRecord: AudioRecord? = null
+
+        return try {
+            // Prepare MediaPlayer with beep_01a resource
+            mediaPlayer = MediaPlayer.create(context, R.raw.beep_01a)
+            if (mediaPlayer == null) {
+                Log.e("AudioCollector", "MediaPlayer.create returned null for beep_01a")
+                return AudioData(
+                    speakerWorking = false,
+                    microphoneWorking = false,
+                    audioTestPassed = false,
+                    speakerVolume = originalVolume,
+                    micSensitivity = 0f,
+                    errorMessage = "Could not load beep_01a.mp3"
+                )
+            }
+
+            // Initialize microphone recorder
+            audioRecord = AudioRecord(
                 MediaRecorder.AudioSource.MIC,
                 sampleRate,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT,
-                bufferSize
+                bufferSize * 4
             )
-            
-            // Prepare MediaPlayer with the resource file
-            // Note: R.raw.test_audio must exist. 
-            // We use the context passed to the class.
-            // Dynamically get resource ID to avoid import issues if R class isn't regenerated yet in IDE context
-            val resId = context.resources.getIdentifier("test_audio", "raw", context.packageName)
-            mediaPlayer = android.media.MediaPlayer.create(context, resId)
-            
-            // Start recording
-            audioRecord.startRecording()
-            delay(100) // Small delay to stabilize
-            
-            // Play beep
-            mediaPlayer?.start()
-            
-            // Record audio while playing
-            // The beep is short, we record for ~2 seconds or until it stops
-            val numSamples = sampleRate * 2 // 2 seconds buffer
-            val recordedData = ShortArray(numSamples)
-            var totalRead = 0
-            val startTime = System.currentTimeMillis()
-            
-            while (totalRead < numSamples && (mediaPlayer?.isPlaying == true || System.currentTimeMillis() - startTime < 2000)) {
-                val read = audioRecord.read(recordedData, totalRead, minOf(bufferSize, numSamples - totalRead))
-                if (read > 0) {
-                    totalRead += read
-                } else {
-                    break
-                }
-                delay(10) // Small yield
+
+            if (audioRecord.state != AudioRecord.STATE_INITIALIZED) {
+                Log.e("AudioCollector", "AudioRecord failed to initialize")
+                return AudioData(
+                    speakerWorking = false,
+                    microphoneWorking = false,
+                    audioTestPassed = false,
+                    speakerVolume = originalVolume,
+                    micSensitivity = 0f,
+                    errorMessage = "AudioRecord init failed"
+                )
             }
-            
-            // Stop and release
-            try {
-                if (mediaPlayer?.isPlaying == true) mediaPlayer?.stop()
-            } catch (e: Exception) { /* Ignore if already stopped */ }
-            mediaPlayer?.release()
-            mediaPlayer = null
-            
+
+            // Start microphone recording first
+            audioRecord.startRecording()
+            delay(100) // small stabilization delay
+
+            // Play beep through speaker
+            var speakerWorking = false
+            mediaPlayer.setOnCompletionListener { speakerWorking = true }
+            mediaPlayer.start()
+            speakerWorking = true // start() didn't throw → speaker is working
+
+            Log.d("AudioCollector", "Playing beep_01a.mp3, recording mic...")
+
+            // Record for 2 seconds (covers the beep duration)
+            val recordDurationMs = 2000L
+            val totalSamples = (sampleRate * (recordDurationMs / 1000f)).toInt()
+            val recorded = ShortArray(totalSamples)
+            var totalRead = 0
+            val endTime = System.currentTimeMillis() + recordDurationMs
+
+            while (totalRead < totalSamples && System.currentTimeMillis() < endTime) {
+                val remaining = totalSamples - totalRead
+                val read = audioRecord.read(recorded, totalRead, minOf(bufferSize, remaining))
+                if (read > 0) totalRead += read
+                delay(5)
+            }
+
+            // Stop recording and playback
             audioRecord.stop()
-            audioRecord.release()
-            
-            // Restore volume
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, originalVolume, 0)
-            
-            // Analyze recorded audio
-            val rms = calculateRMS(recordedData, totalRead)
-            
-            // Threshold for "hearing itself". 
-            // In a quiet room, RMS is usually < 50. 
-            // A loud beep loops back significantly higher, usually > 200-500 depending on gain.
-            // We set a conservative threshold.
-            val micWorking = rms > 100 
-            
-            // If mic 'heard' the sound (RMS > threshold), we assume purely that the speaker 
-            // produced it and the mic captured it. 
-            // Validation of exact signal content is complex without FFT/Correlation.
-            val speakerWorking = micWorking
-            
-            Log.d("AudioCollector", "Audio test - RMS: $rms")
-            
-            return AudioData(
+            if (mediaPlayer.isPlaying) mediaPlayer.stop()
+
+            // Calculate RMS of captured audio
+            val rms = calculateRMS(recorded, totalRead)
+            Log.d("AudioCollector", "Loopback RMS: $rms (threshold: 80)")
+
+            // RMS > 80 means the mic heard the beep from the speaker
+            val micWorking = rms > 80f
+
+            AudioData(
                 speakerWorking = speakerWorking,
                 microphoneWorking = micWorking,
                 audioTestPassed = speakerWorking && micWorking,
@@ -159,33 +169,55 @@ class AudioCollector(private val context: Context) {
                 micSensitivity = rms,
                 errorMessage = null
             )
-            
+
         } catch (e: Exception) {
-            // Restore volume on error
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, originalVolume, 0)
+            Log.e("AudioCollector", "Loopback test failed: ${e.message}")
+            AudioData(
+                speakerWorking = false,
+                microphoneWorking = false,
+                audioTestPassed = false,
+                speakerVolume = originalVolume,
+                micSensitivity = 0f,
+                errorMessage = e.message
+            )
+        } finally {
+            audioRecord?.release()
             mediaPlayer?.release()
-            throw e
+            // Restore original volume
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, originalVolume, 0)
         }
     }
-    
+
+    /**
+     * Speaker-only test (no mic permission): plays beep_01a.mp3.
+     * Returns true if MediaPlayer starts without exception.
+     */
+    private suspend fun testSpeakerOnly(): Boolean = withContext(Dispatchers.IO) {
+        val originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+        val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        var player: MediaPlayer? = null
+        return@withContext try {
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume / 2, 0)
+            player = MediaPlayer.create(context, R.raw.beep_01a)
+            player?.start()
+            delay(1500)
+            true
+        } catch (e: Exception) {
+            Log.e("AudioCollector", "Speaker-only test failed: ${e.message}")
+            false
+        } finally {
+            player?.release()
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, originalVolume, 0)
+        }
+    }
+
     private fun calculateRMS(data: ShortArray, length: Int): Float {
+        if (length <= 0) return 0f
         var sum = 0.0
         for (i in 0 until length) {
-            sum += (data[i] * data[i]).toDouble()
+            sum += data[i].toDouble() * data[i].toDouble()
         }
         return sqrt(sum / length).toFloat()
-    }
-    
-    private fun detectFrequency(data: ShortArray, length: Int, sampleRate: Int): Int {
-        // Simple zero-crossing method for frequency detection
-        var zeroCrossings = 0
-        for (i in 1 until length) {
-            if ((data[i-1] < 0 && data[i] >= 0) || (data[i-1] >= 0 && data[i] < 0)) {
-                zeroCrossings++
-            }
-        }
-        val durationSeconds = length.toFloat() / sampleRate
-        return (zeroCrossings / (2 * durationSeconds)).toInt()
     }
 }
 

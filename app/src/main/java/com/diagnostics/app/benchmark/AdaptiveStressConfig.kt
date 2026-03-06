@@ -8,11 +8,9 @@
  * 
  * Owner: Hasan Oso
  * Student ID: 230212925
- * Institution: OST?M Technical University
+ * Institution: OSTİM Technical University
  */
 package com.diagnostics.app.benchmark
-
-import com.diagnostics.app.benchmark.QuickBenchmark.DeviceTier
 
 data class StressTestConfig(
     val cpuIterationsPerCore: Long,
@@ -24,9 +22,9 @@ data class StressTestConfig(
 
 object AdaptiveStressConfig {
     
-    fun getConfig(tier: DeviceTier): StressTestConfig {
-        return when (tier) {
-            DeviceTier.FLAGSHIP -> StressTestConfig(
+    fun getConfig(deviceTier: String): StressTestConfig {
+        return when (deviceTier) {
+            "FLAGSHIP" -> StressTestConfig(
                 cpuIterationsPerCore = 5_000_000L,
                 cpuTestDuration = 480,      // 8 minutes
                 storageFileCount = 15,
@@ -34,7 +32,7 @@ object AdaptiveStressConfig {
                 batteryTestDuration = 165   // 165s load + 15s baseline = 3 minutes
             )
             
-            DeviceTier.HIGH_END -> StressTestConfig(
+            "HIGH_END" -> StressTestConfig(
                 cpuIterationsPerCore = 3_000_000L,
                 cpuTestDuration = 480,
                 storageFileCount = 12,
@@ -42,7 +40,7 @@ object AdaptiveStressConfig {
                 batteryTestDuration = 165   // 165s load + 15s baseline = 3 minutes
             )
             
-            DeviceTier.MID_RANGE -> StressTestConfig(
+            "MID_RANGE" -> StressTestConfig(
                 cpuIterationsPerCore = 2_000_000L,
                 cpuTestDuration = 420,      // 7 minutes
                 storageFileCount = 10,
@@ -50,7 +48,7 @@ object AdaptiveStressConfig {
                 batteryTestDuration = 165   // 165s load + 15s baseline = 3 minutes
             )
             
-            DeviceTier.BUDGET -> StressTestConfig(
+            "BUDGET" -> StressTestConfig(
                 cpuIterationsPerCore = 1_000_000L,
                 cpuTestDuration = 360,      // 6 minutes
                 storageFileCount = 8,
@@ -58,7 +56,7 @@ object AdaptiveStressConfig {
                 batteryTestDuration = 165   // 165s load + 15s baseline = 3 minutes
             )
             
-            DeviceTier.ENTRY_LEVEL -> StressTestConfig(
+            else -> StressTestConfig(
                 cpuIterationsPerCore = 500_000L,
                 cpuTestDuration = 300,      // 5 minutes
                 storageFileCount = 5,

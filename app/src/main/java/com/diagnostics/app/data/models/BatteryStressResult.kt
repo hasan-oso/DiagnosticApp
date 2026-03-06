@@ -8,7 +8,7 @@
  * 
  * Owner: Hasan Oso
  * Student ID: 230212925
- * Institution: OST?M Technical University
+ * Institution: OSTİM Technical University
  */
 package com.diagnostics.app.data.models
 
@@ -66,7 +66,18 @@ data class BatteryStressResult(
     val syntheticVoltage: SyntheticVoltage? = null,
     val hybridVoltageResult: HybridVoltageResult? = null,
     val data_collection_metadata: com.diagnostics.app.domain.models.DataCollectionMetadata? = null
-)
+) {
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "estimatedHealthPercent" to estimatedHealthPercent.toFloat(),
+            "capacityMetrics" to mapOf(
+                "degradationPercent" to (capacityMetrics?.degradationPercent ?: 0f),
+                "estimatedCurrentCapacityMah" to (capacityMetrics?.currentCapacity?.capacityMah ?: 0f).toFloat()
+            ),
+            "internalResistanceMohm" to internalResistanceMohm
+        )
+    }
+}
 
 @Serializable
 data class VoltageReading(

@@ -8,7 +8,7 @@
  * 
  * Owner: Hasan Oso
  * Student ID: 230212925
- * Institution: OST?M Technical University
+ * Institution: OSTİM Technical University
  */
 package com.diagnostics.app.data.models
 
@@ -27,7 +27,17 @@ data class CpuStressResult(
     val cpuTestIterations: Long = 0,              // New field
     val tempReadings: List<TempReading>,        // كل 5 ثواني
     val freqReadings: List<FreqReading>
-)
+) {
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "performanceDegradationPercent" to performanceDegradationPercent,
+            "peakTemperatureCelsius" to maxTempCelsius,
+            "thermalThrottlingDetected" to (throttlingStartSec != null),
+            "baselineScore" to (quickBenchmarkScore.takeIf { it in 0..100 } ?: 0),
+            "stressScore" to ((quickBenchmarkScore.takeIf { it in 0..100 } ?: 0) * (1f - (performanceDegradationPercent / 100f))).toInt()
+        )
+    }
+}
 
 @Serializable
 data class TempReading(

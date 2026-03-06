@@ -8,18 +8,18 @@
  * 
  * Owner: Hasan Oso
  * Student ID: 230212925
- * Institution: OST?M Technical University
+ * Institution: OSTİM Technical University
  */
 package com.diagnostics.app.data.collectors
 
 import android.os.Build
 
 class IdentityCollector {
-    
+
     fun collectIdentityData(): IdentityData {
         return IdentityData(
-            deviceBrand = Build.BRAND,
-            deviceModel = Build.MODEL,
+            deviceBrand = Build.BRAND.takeIf { it.isNotBlank() } ?: Build.MANUFACTURER,
+            deviceModel = Build.MODEL.takeIf { it.isNotBlank() && it != "?" } ?: Build.DEVICE,
             deviceManufacturer = Build.MANUFACTURER,
             boardPlatform = Build.BOARD,
             buildFingerprint = Build.FINGERPRINT,
@@ -32,7 +32,7 @@ class IdentityCollector {
             buildTags = Build.TAGS
         )
     }
-    
+
     data class IdentityData(
         val deviceBrand: String,
         val deviceModel: String,

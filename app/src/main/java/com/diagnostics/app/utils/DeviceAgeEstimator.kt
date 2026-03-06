@@ -280,26 +280,31 @@ object DeviceAgeEstimator {
      * حساب المتوسط الموزون للتقديرات المجمعة
      */
     private fun calculateWeightedAge(estimates: List<Pair<Float, Float>>): Pair<Float, Float> {
-        if (estimates.isEmpty()) return Pair(0.0f, 0.0f)
+        // Fix 5: never return 0 — use Build.TIME as last-resort fallback
+        val effectiveEstimates = if (estimates.isEmpty()) {
+            val buildAge = getAgeFromBuildTime(System.currentTimeMillis())
+            if (buildAge != null && buildAge > 0f) listOf(Pair(buildAge, 0.15f)) else emptyList()
+        } else estimates
+
+        if (effectiveEstimates.isEmpty()) return Pair(0.0f, 0.0f)
 
         var totalWeightedAge = 0.0f
-        var totalWeight = 0.0f
-        var maxConfidence = 0.0f
+        var totalWeight      = 0.0f
+        var maxConfidence    = 0.0f
 
-        for ((age, weight) in estimates) {
-            totalWeightedAge += (age * weight)
-            totalWeight += weight
-            maxConfidence = max(maxConfidence, weight)
+        for ((age, weight) in effectiveEstimates) {
+            totalWeightedAge += age * weight
+            totalWeight      += weight
+            maxConfidence     = max(maxConfidence, weight)
         }
 
-        val finalAge = totalWeightedAge / totalWeight
-        
-        // تعزيز الثقة إذا توافقت مصادر متعددة
-        val confidenceBoost = if (estimates.size > 2) 0.15f else 0.0f
+        val finalAge        = totalWeightedAge / totalWeight
+        val confidenceBoost = if (effectiveEstimates.size > 2) 0.15f else 0.0f
         val finalConfidence = (maxConfidence + confidenceBoost).coerceAtMost(1.0f)
 
         return Pair(finalAge, finalConfidence)
     }
+
 
     /**
      * حساب العمر بالسنوات من epoch milliseconds

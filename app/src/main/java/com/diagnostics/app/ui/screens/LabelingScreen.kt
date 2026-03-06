@@ -8,7 +8,7 @@
  * 
  * Owner: Hasan Oso
  * Student ID: 230212925
- * Institution: OST?M Technical University
+ * Institution: OSTİM Technical University
  */
 package com.diagnostics.app.ui.screens
 
@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.diagnostics.app.R
+import com.diagnostics.app.utils.language.LocalStrings
 import com.diagnostics.app.viewmodel.LabelViewModel
 
 /**
@@ -82,15 +83,16 @@ fun LabelingScreen(
     val knownIssues = remember { mutableStateListOf<String>() }
     var technicianNotes by remember { mutableStateOf("") }
     var isSubmitting by remember { mutableStateOf(false) }
-    
+    val strings = LocalStrings.current
+
     val submitState by viewModel.submitState.collectAsState()
-    
+
     LaunchedEffect(submitState) {
         if (submitState is com.diagnostics.app.viewmodel.SubmitState.Success) {
             onComplete()
         }
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -108,9 +110,9 @@ fun LabelingScreen(
             modifier = Modifier.fillMaxWidth()
         )
         Text("$overallHealth/100")
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         Text(stringResource(R.string.authenticity))
         Row(modifier = Modifier.fillMaxWidth()) {
             listOf("GENUINE", "SUSPICIOUS", "FAKE").forEach { option ->
@@ -121,9 +123,9 @@ fun LabelingScreen(
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         Text(stringResource(R.string.refurbishment))
         Column {
             listOf("ORIGINAL", "MINOR_REPAIR", "REFURBISHED").forEach { option ->
@@ -134,9 +136,9 @@ fun LabelingScreen(
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         Text(stringResource(R.string.usage_intensity))
         Row(modifier = Modifier.fillMaxWidth()) {
             listOf("LIGHT", "MODERATE", "HEAVY").forEach { option ->
@@ -147,11 +149,9 @@ fun LabelingScreen(
                 )
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
-        // ...
-        
+
         Text(stringResource(R.string.replaced_components))
         listOf("BATTERY", "SCREEN", "CAMERA").forEach { component ->
             Row(
@@ -173,9 +173,8 @@ fun LabelingScreen(
             }
         }
 
-        
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         OutlinedTextField(
             value = technicianNotes,
             onValueChange = { technicianNotes = it },
@@ -183,9 +182,9 @@ fun LabelingScreen(
             modifier = Modifier.fillMaxWidth(),
             minLines = 3
         )
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         Button(
             onClick = {
                 isSubmitting = true
@@ -212,21 +211,18 @@ fun LabelingScreen(
                 Text(stringResource(R.string.submit))
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
-        // Skip Button (Phase 2 Optional)
+
+        // Skip Button
         OutlinedButton(
-            onClick = {
-                // Just navigate away, data already uploaded in Phase 1
-                onComplete()
-            },
+            onClick = { onComplete() },
             modifier = Modifier.fillMaxWidth(),
             enabled = !isSubmitting
         ) {
-             Text("تخطي")
+            Text(strings.skip)
         }
-        
+
         if (submitState is com.diagnostics.app.viewmodel.SubmitState.Error) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(

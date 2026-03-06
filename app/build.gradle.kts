@@ -23,8 +23,8 @@ android {
         applicationId = "com.diagnostics.app"
         minSdk = 26
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.3.0"
+        versionCode = 6
+        versionName = "1.5.0"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -89,6 +89,7 @@ dependencies {
     // Compose
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.activity:activity-compose:1.8.1")
     implementation("androidx.navigation:navigation-compose:2.7.5")
@@ -135,4 +136,11 @@ dependencies {
     
     // Image Loading
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // QR Code - توليد ومسح
+    implementation("com.google.zxing:core:3.5.2")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+
+    // Material Icons Extended (للأيقونات الإضافية مثل QrCode)
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
 }

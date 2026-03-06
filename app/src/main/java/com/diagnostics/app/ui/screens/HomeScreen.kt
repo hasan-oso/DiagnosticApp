@@ -79,12 +79,12 @@ fun HomeScreen(
                     ) {
                         Column {
                             Text(
-                                text = "فحوصات في انتظار الرفع",
+                                text = stringResource(R.string.pending_uploads),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = "${pendingCount.value} فحص",
+                                text = stringResource(R.string.pending_count, pendingCount.value),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
                             )
@@ -93,7 +93,7 @@ fun HomeScreen(
                         Button(
                             onClick = {
                                 coroutineScope.launch {
-                                    android.widget.Toast.makeText(context, "جاري محاولة الرفع...", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(context, context.getString(R.string.uploading), android.widget.Toast.LENGTH_SHORT).show()
                                     repository.syncPendingScans()
                                     // Refresh count
                                     kotlinx.coroutines.delay(2000) 
@@ -106,7 +106,7 @@ fun HomeScreen(
                                 contentDescription = "Sync"
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("رفع الآن")
+                            Text(stringResource(R.string.upload_now))
                         }
                     }
                 }
@@ -130,6 +130,7 @@ fun HomeScreen(
         ) {
             Text(stringResource(R.string.language))
         }
+        
     }
     
     if (showLanguageDialog) {

@@ -47,7 +47,7 @@ class CameraCollector(private val context: Context) {
             != PackageManager.PERMISSION_GRANTED) {
             Log.w("CameraCollector", "Camera permission not granted")
             return CameraData(
-                cameraCount = 0,
+                cameraCount = -1,
                 backCameraMP = 0f,
                 frontCameraMP = 0f,
                 hasFlash = false,

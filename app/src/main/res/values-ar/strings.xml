@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- اسم التطبيق -->
-    <string name="app_name">Phone Doctor</string>
+    <string name="app_name">NeuralCheck</string>
     
     <!-- الشاشة الرئيسية -->
     <string name="welcome_title">مرحباً بك في فحص الهواتف</string>
@@ -150,4 +150,103 @@
     <string name="stress_testing">اختبار الإجهاد</string>
     <string name="success_upload">تم الرفع بنجاح</string>
     <string name="initializing">جارٍ التهيئة…</string>
+
+    <!-- Pending Uploads -->
+    <string name="pending_uploads">فحوصات في انتظار الرفع</string>
+    <string name="pending_count">%d فحص</string>
+    <string name="uploading">جاري محاولة الرفع…</string>
+    <string name="upload_now">رفع الآن</string>
+
+    <!-- Validation Messages -->
+    <string name="select_condition">يرجى اختيار الحالة العامة</string>
+    <string name="select_authenticity">يرجى اختيار أصالة الجهاز</string>
+    <string name="select_intensity">يرجى اختيار كثافة الاستخدام</string>
+
+    <!-- PDF & Export -->
+    <string name="pdf_save_failed">فشل حفظ التقرير PDF</string>
+    <string name="error_with_message">خطأ: %s</string>
+    <string name="no_pdf_app">لا يوجد تطبيق لفتح PDF</string>
+    <string name="share_error">خطأ في المشاركة</string>
+    <string name="export_pdf_report">تصدير التقرير الفني (PDF)</string>
+    <string name="open_pdf">فتح PDF</string>
+    <string name="share_report">مشاركة التقرير</string>
+    <string name="report_subject">تقرير فحص %s - NeuralCheck</string>
+    <string name="report_body">تقرير الفحص التقني من NeuralCheck\nneuralcheck.net</string>
+
+    <!-- Report Screen -->
+    <string name="technical_report">تقرير الفحص الفني</string>
+    <string name="price_estimate">التقييم والسعر التقديري</string>
+    <string name="suggested_market_value">القيمة السوقية المقترحة</string>
+    <string name="score_impact">متأثر بالنتيجة: %d/100</string>
+    <string name="battery_section">البطارية</string>
+    <string name="performance_section">الأداء والمعالج</string>
+    <string name="storage_section">التخزين</string>
+    <string name="hardware_section">مواصفات الجهاز</string>
+    <string name="security_connectivity">الأمان والاتصال</string>
+
+    <!-- Dashboard -->
+    <string name="total">إجمالي</string>
+    <string name="in_stock">مخزون</string>
+    <string name="sold">مباع</string>
+    <string name="total_revenue">💰 الأرباح الإجمالية</string>
+    <string name="purchase">شراء:</string>
+    <string name="sold_label">بيع:</string>
+    <string name="profit">ربح:</string>
+    <string name="all_tab">الكل</string>
+    <string name="stock_tab">مخزون</string>
+    <string name="sold_tab">مباع</string>
+    <string name="purchase_price_label">شراء: %s TL</string>
+    <string name="sold_price_label">بيع: %s TL</string>
+    <string name="profit_label">ربح: %s TL</string>
+    <string name="suggested_price">سعر البيع المقترح: %s TL</string>
+    <string name="download_report">تحميل التقرير</string>
+    <string name="error_toast">❌ خطأ: %s</string>
+
+    <!-- ScanComplete Screen -->
+    <string name="overall_score_label">التقييم العام</string>
+    <string name="battery_label">البطارية</string>
+    <string name="performance_label">الأداء</string>
+    <string name="storage_label">التخزين</string>
+    <string name="device_label">الجهاز</string>
+    <string name="security_label">الأمان</string>
+    <string name="create_pdf_report">إنشاء التقرير PDF</string>
+    <string name="new_scan">فحص جديد</string>
+
+    <!-- GeneratePin Screen -->
+    <string name="generate_temp_pin">توليد كود مؤقت</string>
+    <string name="pin_expired">منتهي الصلاحية</string>
+    <string name="pin_valid_for">صالح لمدة: %s</string>
+    <string name="give_pin_instruction">أعطِ هذا الكود للموظف\nأو للزبون لفحص جهازه</string>
+    <string name="generate_new_pin">توليد كود جديد</string>
+    <string name="copy_pin">نسخ الكود</string>
+    <string name="pin_copied">تم نسخ الكود بنجاح</string>
+
+    <!-- PinEntry Screen -->
+    <string name="enter_shop_pin">أدخل كود المحل</string>
+    <string name="invalid_expired_pin">الكود غير صحيح أو منتهي الصلاحية</string>
+    <string name="confirm_button">تأكيد</string>
+    <string name="no_pin_question">ليس لديك كود؟</string>
+    <string name="scan_as_guest">فحص بدون حساب</string>
+
+    <!-- WelcomeScreen -->
+    <string name="enter_scan_pin">أدخل كود المحل للفحص</string>
+
+    <!-- RegisterScreen -->
+    <string name="shop_type_hint">متجر / ورشة / موزع</string>
+    <string name="upload_logo_hint">اضغط لرفع الشعار\n(اختياري)</string>
+
+    <!-- ResultScreen -->
+    <string name="tip_export">💡 نصيحة: صدّر البيانات بانتظام لتدريب الذكاء الاصطناعي</string>
+    <string name="tip_better_results">💡 نصيحة لنتائج أفضل</string>
+    <string name="charge_for_accuracy">لقياس السعة بدقة، اشحن البطارية إلى 90%+ ثم أعد الاختبار.</string>
+    <string name="current_charge">الشحن الحالي: %d%%</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="language_setting">اللغة</string>
+    <string name="account_info">معلومات الحساب</string>
+    <string name="shop_name_label">اسم المتجر</string>
+    <string name="email_label">البريد الإلكتروني</string>
+    <string name="version_label">الإصدار</string>
+    <string name="save_settings">حفظ</string>
 </resources>

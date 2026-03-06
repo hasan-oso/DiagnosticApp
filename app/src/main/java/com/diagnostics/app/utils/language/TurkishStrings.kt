@@ -48,6 +48,16 @@ class TurkishStrings : ReportLanguage {
     }
 
     override fun getString(key: String): String = when (key) {
+        "report_title" -> reportTitle
+        "diagnostic_results" -> "Teşhis Detayları"
+        "battery" -> battery
+        "performance" -> performance
+        "storage" -> storage
+        "security" -> "Güvenlik"
+        "recommendation" -> "Öneri ve Fiyat Tahmini"
+        "suggested_price" -> suggestedPrice
+        "strengths" -> "$strengths:"
+        "warnings" -> "$warnings:"
         "battery_degradation_high" -> "Pil aşınması yüksek"
         "battery_degradation_critical" -> "Pil aşınması kritik — değiştirilmesi önerilir"
         "battery_excellent" -> "Pil mükemmel durumda"
@@ -58,6 +68,10 @@ class TurkishStrings : ReportLanguage {
         "all_features_work" -> "Tüm özellikler çalışıyor"
         "device_new" -> "Cihaz yeni"
         "device_old" -> "Cihaz nispeten eski"
+        "security_warning" -> "Güvenlik Uyardı"
+        "device_rooted" -> "Cihaz rootlanmış"
+        "developer_options_on" -> "Geliştirici seçenekleri açık"
+        "adb_warning" -> "USB hata ayıklama açık"
         else -> key
     }
 }

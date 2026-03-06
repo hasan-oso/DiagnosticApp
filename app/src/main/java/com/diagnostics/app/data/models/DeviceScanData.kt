@@ -175,5 +175,8 @@ data class DeviceScanData(
     val scanId: String,                         // UUID
 
     // Metadata لتحليل البيانات المستقبلي
-    val data_collection_metadata: com.diagnostics.app.domain.models.DataCollectionMetadata? = null
+    val data_collection_metadata: com.diagnostics.app.domain.models.DataCollectionMetadata? = null,
+    val pdfUrl: String? = null,
+    val pdfLocalPath: String? = null
 )
+

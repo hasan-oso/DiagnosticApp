@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Name -->
-    <string name="app_name">Phone Doctor</string>
+    <string name="app_name">NeuralCheck</string>
     
     <!-- Main Screen -->
     <string name="welcome_title">Welcome to Phone Diagnostics</string>
@@ -151,4 +151,103 @@
     <string name="component_screen">Screen</string>
     <string name="component_camera">Camera</string>
     <string name="initializing">Initializing…</string>
+
+    <!-- Pending Uploads -->
+    <string name="pending_uploads">Pending Uploads</string>
+    <string name="pending_count">%d scan(s)</string>
+    <string name="uploading">Uploading…</string>
+    <string name="upload_now">Upload Now</string>
+
+    <!-- Validation Messages -->
+    <string name="select_condition">Please select overall condition</string>
+    <string name="select_authenticity">Please select device authenticity</string>
+    <string name="select_intensity">Please select usage intensity</string>
+
+    <!-- PDF & Export -->
+    <string name="pdf_save_failed">Failed to save PDF report</string>
+    <string name="error_with_message">Error: %s</string>
+    <string name="no_pdf_app">No app available to open PDF</string>
+    <string name="share_error">Error sharing file</string>
+    <string name="export_pdf_report">Export Technical Report (PDF)</string>
+    <string name="open_pdf">Open PDF</string>
+    <string name="share_report">Share Report</string>
+    <string name="report_subject">%s Diagnostic Report - NeuralCheck</string>
+    <string name="report_body">Technical diagnostic report from NeuralCheck\nneuralcheck.net</string>
+
+    <!-- Report Screen -->
+    <string name="technical_report">Technical Diagnostic Report</string>
+    <string name="price_estimate">Price Estimate</string>
+    <string name="suggested_market_value">Suggested Market Value</string>
+    <string name="score_impact">Score impact: %d/100</string>
+    <string name="battery_section">Battery</string>
+    <string name="performance_section">Performance &amp; CPU</string>
+    <string name="storage_section">Storage Memory</string>
+    <string name="hardware_section">Hardware Specs</string>
+    <string name="security_connectivity">Security &amp; Connectivity</string>
+
+    <!-- Dashboard -->
+    <string name="total">Total</string>
+    <string name="in_stock">In Stock</string>
+    <string name="sold">Sold</string>
+    <string name="total_revenue">💰 Total Revenue</string>
+    <string name="purchase">Purchase:</string>
+    <string name="sold_label">Sold:</string>
+    <string name="profit">Profit:</string>
+    <string name="all_tab">All</string>
+    <string name="stock_tab">Stock</string>
+    <string name="sold_tab">Sold</string>
+    <string name="purchase_price_label">Purchase: %s TL</string>
+    <string name="sold_price_label">Sold: %s TL</string>
+    <string name="profit_label">Profit: %s TL</string>
+    <string name="suggested_price">Suggested: %s TL</string>
+    <string name="download_report">Download Report</string>
+    <string name="error_toast">❌ Error: %s</string>
+
+    <!-- ScanComplete Screen -->
+    <string name="overall_score_label">Overall Score</string>
+    <string name="battery_label">Battery</string>
+    <string name="performance_label">Performance</string>
+    <string name="storage_label">Storage</string>
+    <string name="device_label">Device</string>
+    <string name="security_label">Security</string>
+    <string name="create_pdf_report">Create PDF Report</string>
+    <string name="new_scan">New Scan</string>
+
+    <!-- GeneratePin Screen -->
+    <string name="generate_temp_pin">Generate Temporary PIN</string>
+    <string name="pin_expired">EXPIRED</string>
+    <string name="pin_valid_for">Valid for: %s</string>
+    <string name="give_pin_instruction">Give this code to the employee\nor to the customer to scan their device</string>
+    <string name="generate_new_pin">Generate New PIN</string>
+    <string name="copy_pin">Copy PIN</string>
+    <string name="pin_copied">PIN copied successfully</string>
+
+    <!-- PinEntry Screen -->
+    <string name="enter_shop_pin">Enter Shop PIN</string>
+    <string name="invalid_expired_pin">Invalid or expired PIN</string>
+    <string name="confirm_button">Confirm</string>
+    <string name="no_pin_question">Don\'t have a code?</string>
+    <string name="scan_as_guest">Scan as Guest</string>
+
+    <!-- WelcomeScreen -->
+    <string name="enter_scan_pin">Enter Scan PIN</string>
+
+    <!-- RegisterScreen -->
+    <string name="shop_type_hint">Shop / Workshop / Distributor</string>
+    <string name="upload_logo_hint">Tap to upload logo\n(Optional)</string>
+
+    <!-- ResultScreen -->
+    <string name="tip_export">💡 Tip: Export data regularly for ML training</string>
+    <string name="tip_better_results">💡 Tip for better results</string>
+    <string name="charge_for_accuracy">For accurate capacity measurement, charge battery to 90%+ and retest.</string>
+    <string name="current_charge">Current charge: %d%%</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="language_setting">Language</string>
+    <string name="account_info">Account Information</string>
+    <string name="shop_name_label">Shop Name</string>
+    <string name="email_label">Email</string>
+    <string name="version_label">Version</string>
+    <string name="save_settings">Save</string>
 </resources>

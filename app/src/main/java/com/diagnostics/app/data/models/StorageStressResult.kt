@@ -8,7 +8,7 @@
  * 
  * Owner: Hasan Oso
  * Student ID: 230212925
- * Institution: OST?M Technical University
+ * Institution: OSTİM Technical University
  */
 package com.diagnostics.app.data.models
 
@@ -24,7 +24,16 @@ data class StorageStressResult(
     val detectedType: String,                   // "UFS_3_1", "eMMC_5_1", etc.
     val storageTestFileCount: Int = 0,          // New field
     val writeSpeedCurve: List<SpeedPoint>       // 10 نقاط
-)
+) {
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "sequentialReadMbps" to sequentialReadMbps,
+            "sequentialWriteMbps" to sequentialWriteMbps,
+            "random4kReadIops" to random4kReadIops,
+            "detectedType" to detectedType
+        )
+    }
+}
 
 @Serializable
 data class SpeedPoint(

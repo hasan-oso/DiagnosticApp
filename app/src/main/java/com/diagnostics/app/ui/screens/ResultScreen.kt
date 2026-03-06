@@ -45,7 +45,7 @@ fun ResultScreen(
         Spacer(modifier = Modifier.height(32.dp))
         
         Text(
-            text = "💡 Tip: Export data regularly for ML training",
+            text = stringResource(R.string.tip_export),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(8.dp)
@@ -84,16 +84,16 @@ fun CapacityRecommendation(metrics: BatteryCapacityMetrics) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "💡 نصيحة لنتائج أفضل",
+                    text = stringResource(R.string.tip_better_results),
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "لقياس السعة الحالية بدقة، اشحن البطارية إلى 90%+ ثم أعد الاختبار.",
+                    text = stringResource(R.string.charge_for_accuracy),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "الشحن الحالي: $soc%",
+                    text = stringResource(R.string.current_charge, soc),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
                 )

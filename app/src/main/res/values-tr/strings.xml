@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Uygulama Adı -->
-    <string name="app_name">Phone Doctor</string>
+    <string name="app_name">NeuralCheck</string>
     
     <!-- Ana Ekran -->
     <string name="welcome_title">Telefon Teşhisine Hoş Geldiniz</string>
@@ -150,4 +150,103 @@
     <string name="stress_testing">Stres Testi</string>
     <string name="success_upload">Başarıyla Yüklendi</string>
     <string name="initializing">Başlatılıyor…</string>
+
+    <!-- Pending Uploads -->
+    <string name="pending_uploads">Yüklenmeyi Bekleyenler</string>
+    <string name="pending_count">%d tarama</string>
+    <string name="uploading">Yükleniyor…</string>
+    <string name="upload_now">Şimdi Yükle</string>
+
+    <!-- Validation Messages -->
+    <string name="select_condition">Lütfen genel durumu seçin</string>
+    <string name="select_authenticity">Lütfen cihaz orijinalliğini seçin</string>
+    <string name="select_intensity">Lütfen kullanım yoğunluğunu seçin</string>
+
+    <!-- PDF & Export -->
+    <string name="pdf_save_failed">PDF rapor kaydetme başarısız</string>
+    <string name="error_with_message">Hata: %s</string>
+    <string name="no_pdf_app">PDF açacak uygulama bulunamadı</string>
+    <string name="share_error">Paylaşma hatası</string>
+    <string name="export_pdf_report">Teknik Raporu Dışa Aktar (PDF)</string>
+    <string name="open_pdf">PDF Aç</string>
+    <string name="share_report">Raporu Paylaş</string>
+    <string name="report_subject">%s Teşhis Raporu - NeuralCheck</string>
+    <string name="report_body">NeuralCheck teknik teşhis raporu\nneuralcheck.net</string>
+
+    <!-- Report Screen -->
+    <string name="technical_report">Teknik Teşhis Raporu</string>
+    <string name="price_estimate">Fiyat Tahmini</string>
+    <string name="suggested_market_value">Önerilen Piyasa Değeri</string>
+    <string name="score_impact">Puana göre: %d/100</string>
+    <string name="battery_section">Pil</string>
+    <string name="performance_section">Performans ve İşlemci</string>
+    <string name="storage_section">Depolama</string>
+    <string name="hardware_section">Donanım Özellikleri</string>
+    <string name="security_connectivity">Güvenlik ve Bağlantı</string>
+
+    <!-- Dashboard -->
+    <string name="total">Toplam</string>
+    <string name="in_stock">Stokta</string>
+    <string name="sold">Satıldı</string>
+    <string name="total_revenue">💰 Toplam Gelir</string>
+    <string name="purchase">Alış:</string>
+    <string name="sold_label">Satış:</string>
+    <string name="profit">Kâr:</string>
+    <string name="all_tab">Tümü</string>
+    <string name="stock_tab">Stok</string>
+    <string name="sold_tab">Satıldı</string>
+    <string name="purchase_price_label">Alış: %s TL</string>
+    <string name="sold_price_label">Satış: %s TL</string>
+    <string name="profit_label">Kâr: %s TL</string>
+    <string name="suggested_price">Önerilen fiyat: %s TL</string>
+    <string name="download_report">Raporu İndir</string>
+    <string name="error_toast">❌ Hata: %s</string>
+
+    <!-- ScanComplete Screen -->
+    <string name="overall_score_label">Genel Puan</string>
+    <string name="battery_label">Pil</string>
+    <string name="performance_label">Performans</string>
+    <string name="storage_label">Depolama</string>
+    <string name="device_label">Cihaz</string>
+    <string name="security_label">Güvenlik</string>
+    <string name="create_pdf_report">PDF Raporu Oluştur</string>
+    <string name="new_scan">Yeni Tarama</string>
+
+    <!-- GeneratePin Screen -->
+    <string name="generate_temp_pin">Geçici PIN Oluştur</string>
+    <string name="pin_expired">SÜRESİ DOLDU</string>
+    <string name="pin_valid_for">Geçerlilik: %s</string>
+    <string name="give_pin_instruction">Bu kodu çalışanınıza\nveya müşterinize cihazını taramak için verin</string>
+    <string name="generate_new_pin">Yeni PIN Oluştur</string>
+    <string name="copy_pin">PIN\'i Kopyala</string>
+    <string name="pin_copied">PIN başarıyla kopyalandı</string>
+
+    <!-- PinEntry Screen -->
+    <string name="enter_shop_pin">Mağaza PIN\'ini Girin</string>
+    <string name="invalid_expired_pin">Geçersiz veya süresi dolmuş PIN</string>
+    <string name="confirm_button">Onayla</string>
+    <string name="no_pin_question">Kodunuz yok mu?</string>
+    <string name="scan_as_guest">Misafir olarak tara</string>
+
+    <!-- WelcomeScreen -->
+    <string name="enter_scan_pin">Tarama PIN\'ini Girin</string>
+
+    <!-- RegisterScreen -->
+    <string name="shop_type_hint">Mağaza / Atölye / Distribütör</string>
+    <string name="upload_logo_hint">Logo yüklemek için dokunun\n(İsteğe bağlı)</string>
+
+    <!-- ResultScreen -->
+    <string name="tip_export">💡 İpucu: ML eğitimi için verileri düzenli olarak dışa aktarın</string>
+    <string name="tip_better_results">💡 Daha iyi sonuçlar için ipucu</string>
+    <string name="charge_for_accuracy">Doğru kapasite ölçümü için pili %90+ düzeyine şarj edin ve tekrar test edin.</string>
+    <string name="current_charge">Mevcut şarj: %d%%</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Ayarlar</string>
+    <string name="language_setting">Dil</string>
+    <string name="account_info">Hesap Bilgileri</string>
+    <string name="shop_name_label">Mağaza Adı</string>
+    <string name="email_label">E-posta</string>
+    <string name="version_label">Sürüm</string>
+    <string name="save_settings">Kaydet</string>
 </resources>

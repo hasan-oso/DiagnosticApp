@@ -48,6 +48,16 @@ class EnglishStrings : ReportLanguage {
     }
 
     override fun getString(key: String): String = when (key) {
+        "report_title" -> reportTitle
+        "diagnostic_results" -> "Diagnostic Results"
+        "battery" -> battery
+        "performance" -> performance
+        "storage" -> storage
+        "security" -> "Security"
+        "recommendation" -> "Recommendation & Price Estimate"
+        "suggested_price" -> suggestedPrice
+        "strengths" -> "$strengths:"
+        "warnings" -> "$warnings:"
         "battery_degradation_high" -> "Battery degradation high"
         "battery_degradation_critical" -> "Battery degradation critical — replacement recommended"
         "battery_excellent" -> "Battery in excellent condition"
@@ -58,6 +68,10 @@ class EnglishStrings : ReportLanguage {
         "all_features_work" -> "All features working"
         "device_new" -> "Device is new"
         "device_old" -> "Device relatively old"
+        "security_warning" -> "Security Warning"
+        "device_rooted" -> "Device is Rooted"
+        "developer_options_on" -> "Developer Options Enabled"
+        "adb_warning" -> "USB Debugging Enabled"
         else -> key
     }
 }

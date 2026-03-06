@@ -24,12 +24,6 @@ data class DeviceScore(
     val issues: List<String> = emptyList()
 )
 
-data class PriceRange(
-    val min: Int = 0,
-    val max: Int = 0,
-    val condition: String = "",
-    val confidence: Double = 0.0
-)
 
 data class RegistrationData(
     val email: String = "",

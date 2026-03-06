@@ -2,37 +2,74 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permissions -->
-    <!-- Camera & Audio - all versions -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- الصلاحيات الحرجة (CRITICAL) - مطلوبة لعمل التطبيق -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Internet & Network (لـ Firebase) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Camera (لاختبار الكاميرا) -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.front" android:required="false" />
+
+    <!-- Audio (لاختبار المايكروفون والسماعة) -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-    <!-- Storage - Android 12 and below only -->
-    <uses-permission 
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <!-- Storage (لاختبار التخزين وحفظ PDF) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission 
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"
+        tools:ignore="ScopedStorage" />
 
-    <!-- Media - Android 13+ -->
+    <!-- Storage للأندرويد 13+ -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.NFC"/>
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <!-- Device Info (لمعلومات الجهاز) -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <!-- Foreground Service (stress tests) -->
+    <!-- Wake Lock (لمنع النوم أثناء الفحص) -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Foreground Service (للإشعار أثناء الفحص) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"
+        android:minSdkVersion="34" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"
+        android:minSdkVersion="33" />
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- الصلاحيات الاختيارية (OPTIONAL) -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Bluetooth (لمعلومات Bluetooth) -->
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"
+        android:minSdkVersion="31" />
+    <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
+
+    <!-- WiFi (لمعلومات WiFi) -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- NFC (للتحقق من NFC) -->
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-feature android:name="android.hardware.nfc" android:required="false" />
+
+    <!-- Location (لموقع المحل - اختياري) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- حسابات Google -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- Vibrate -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -44,7 +81,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DiagnosticApp"
         tools:targetApi="31">
-        
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -59,7 +96,7 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Device diagnostic and stress testing" />
         </service>
-            
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -70,16 +107,23 @@
             </intent-filter>
         </activity>
 
+        <!-- ZXing Scanner Activity — مطلوبة لمسح QR -->
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation" />
+
         <!-- FileProvider for PDF sharing -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileprovider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
     </application>
 
 </manifest>

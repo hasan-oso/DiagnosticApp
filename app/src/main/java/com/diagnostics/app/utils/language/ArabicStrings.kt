@@ -48,6 +48,16 @@ class ArabicStrings : ReportLanguage {
     }
 
     override fun getString(key: String): String = when (key) {
+        "report_title" -> reportTitle
+        "diagnostic_results" -> "تفاصيل الفحص"
+        "battery" -> battery
+        "performance" -> performance
+        "storage" -> storage
+        "security" -> "الأمان"
+        "recommendation" -> "التوصية والسعر التقديري"
+        "suggested_price" -> suggestedPrice
+        "strengths" -> "$strengths:"
+        "warnings" -> "$warnings:"
         "battery_degradation_high" -> "تدهور البطارية مرتفع"
         "battery_degradation_critical" -> "تدهور البطارية حرج — يُنصح بالاستبدال"
         "battery_excellent" -> "البطارية بحالة ممتازة"
@@ -58,6 +68,10 @@ class ArabicStrings : ReportLanguage {
         "all_features_work" -> "كل المميزات تعمل"
         "device_new" -> "الجهاز جديد"
         "device_old" -> "الجهاز قديم نسبياً"
+        "security_warning" -> "تحذير أمني"
+        "device_rooted" -> "الجهاز مفتوح الصلاحيات (Rooted)"
+        "developer_options_on" -> "خيارات المطور مفعلة"
+        "adb_warning" -> "تصحيح USB مفعّل"
         else -> key
     }
 }

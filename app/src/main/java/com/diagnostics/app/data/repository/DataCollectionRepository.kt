@@ -86,17 +86,23 @@ class DataCollectionRepository(private val context: Context) {
         val (deviceAge, ageConfidence) = com.diagnostics.app.utils.DeviceAgeEstimator.estimateDeviceAgeYears(context)
         val ageCategory = getAgeCategory(deviceAge)
 
+        // GPU renderer & screen refresh rate
+        val gpuRendererDynamic = DisplayInfoCollector.getGPURenderer(context)
+        val screenRefreshRateDynamic = DisplayInfoCollector.getRefreshRate(context)
+
         // Benchmarking & Performance Tier
-        val quickBenchmarkScore = com.diagnostics.app.benchmark.QuickBenchmark.getCPUScore()
-        val deviceTier = com.diagnostics.app.benchmark.QuickBenchmark.getDeviceTier(quickBenchmarkScore)
+        val quickBenchmarkScore = QuickBenchmark.getCPUScore()
+        val deviceTier = QuickBenchmark.calculatePerformanceTier(
+            cpuMaxFreqMhz = hardware.cpuMaxFreqMhz,
+            cpuCoreCount = hardware.cpuCoreCount,
+            ramTotalMb = memory.ramTotalMb.toInt(),
+            gpuRenderer = gpuRendererDynamic.takeIf { it != "unknown" } ?: hardware.gpuRenderer,
+            androidSdk = identity.androidSdk
+        )
 
         // CPU extended info
         val cpuGovernor = CPUInfoCollector.getCPUGovernor()
         val (cpuBigCores, cpuLittleCores) = CPUInfoCollector.getCoreSplit()
-
-        // GPU renderer & screen refresh rate
-        val gpuRendererDynamic = DisplayInfoCollector.getGPURenderer(context)
-        val screenRefreshRateDynamic = DisplayInfoCollector.getRefreshRate(context)
         
         // ── STRESS TESTS MOVED TO VIEWMODEL ────────────────────────────────
         // We do NOT run stress tests here to avoid blocking the data collection phase.
@@ -111,7 +117,7 @@ class DataCollectionRepository(private val context: Context) {
             singleCoreScore = 0,
             multiCoreScore = 0,
             quickBenchmarkScore = quickBenchmarkScore,
-            devicePerformanceTier = deviceTier.toString(),
+            devicePerformanceTier = deviceTier,
             cpuTestIterations = 0,
             tempReadings = emptyList(),
             freqReadings = emptyList()
@@ -268,7 +274,7 @@ class DataCollectionRepository(private val context: Context) {
             deviceAgeConfidence = ageConfidence,
             deviceAgeCategory = ageCategory,
             quickBenchmarkScore = quickBenchmarkScore,
-            devicePerformanceTier = deviceTier.toString(),
+            devicePerformanceTier = deviceTier,
 
             // CPU Extended Info
             cpuGovernor = cpuGovernor,

@@ -131,19 +131,19 @@ class SurveyDialog(context: Context, private val onSubmit: (SurveyResponse) -> U
     private fun validateInputs(): Boolean {
         // Q1 required
         if (q1RadioGroup.checkedRadioButtonId == -1) {
-            Toast.makeText(context, "Please select overall condition", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.select_condition), Toast.LENGTH_SHORT).show()
             return false
         }
         
         // Q3 required
         if (q3RadioGroup.checkedRadioButtonId == -1) {
-            Toast.makeText(context, "Please select device authenticity", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.select_authenticity), Toast.LENGTH_SHORT).show()
             return false
         }
         
         // Q4 required
         if (q4RadioGroup.checkedRadioButtonId == -1) {
-            Toast.makeText(context, "Please select usage intensity", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.select_intensity), Toast.LENGTH_SHORT).show()
             return false
         }
         

@@ -13,7 +13,10 @@
 package com.diagnostics.app.data.repository
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import com.diagnostics.app.data.models.auth.ShopAccount
 import com.diagnostics.app.data.models.auth.ShopInfo
@@ -21,11 +24,10 @@ import com.diagnostics.app.data.models.auth.RegistrationData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.util.UUID
+import java.io.ByteArrayOutputStream
 
 /**
  * AuthRepository — Handles Firebase Authentication, shop profile CRUD,
@@ -35,12 +37,11 @@ class AuthRepository(private val context: Context) {
 
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
-    private val storage = FirebaseStorage.getInstance()
 
     companion object {
         private const val TAG = "AuthRepo"
         private const val COLLECTION_SHOPS = "shops"
-        private const val STORAGE_LOGOS = "shop_logos"
+        // تم حذف STORAGE_LOGOS — نستخدم Base64 في Firestore
     }
 
     // ══════════════════════════════════════════════
@@ -186,32 +187,41 @@ class AuthRepository(private val context: Context) {
     }
 
     // ══════════════════════════════════════════════
-    // Logo Upload
+    // Logo Upload (بدون Firebase Storage)
     // ══════════════════════════════════════════════
 
     /**
-     * Upload shop logo to Firebase Storage.
-     * @return The download URL of the uploaded logo.
+     * تحويل صورة الشعار إلى Base64 وحفظها في Firestore مباشرة، بدون Firebase Storage.
      */
-    suspend fun uploadLogo(imageUri: Uri): String? {
-        return withContext(Dispatchers.IO) {
-            try {
-                val uid = currentUser?.uid ?: return@withContext null
-                val filename = "${uid}_${UUID.randomUUID()}.jpg"
+    @Suppress("DEPRECATION")
+    suspend fun uploadLogoAsBase64(
+        context: Context,
+        uri: Uri,
+        shopId: String
+    ): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            // قراءة الصورة
+            val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
 
-                val ref = storage.reference
-                    .child(STORAGE_LOGOS)
-                    .child(filename)
+            // تصغير إلى 200×200 لتقليل الحجم
+            val resized = Bitmap.createScaledBitmap(bitmap, 200, 200, true)
 
-                ref.putFile(imageUri).await()
-                val downloadUrl = ref.downloadUrl.await().toString()
+            // تحويل إلى Base64
+            val outputStream = ByteArrayOutputStream()
+            resized.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
+            val base64 = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+            val logoData = "data:image/jpeg;base64,$base64"
 
-                Log.d(TAG, "✅ Logo uploaded: $downloadUrl")
-                downloadUrl
-            } catch (e: Exception) {
-                Log.e(TAG, "❌ Logo upload failed: ${e.message}", e)
-                null
-            }
+            // حفظ في Firestore
+            firestore.collection(COLLECTION_SHOPS).document(shopId)
+                .update("shopInfo.logoUrl", logoData)
+                .await()
+
+            Log.d(TAG, "✅ Logo saved as Base64 in Firestore (${outputStream.size()} bytes)")
+            Result.success(logoData)
+        } catch (e: Exception) {
+            Log.e(TAG, "❌ Logo upload failed: \${e.message}", e)
+            Result.failure(e)
         }
     }
 

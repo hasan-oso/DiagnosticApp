@@ -100,16 +100,16 @@ class StressTestEngine(private val context: Context) {
     private val TAG = "StressTestEngine"
 
     private var stressConfig: StressTestConfig? = null
-    private var deviceTier: QuickBenchmark.DeviceTier? = null
+    private var deviceTier: String? = null
     private var quickBenchmarkScore: Int = 0
     
-    private suspend fun initializeAdaptiveConfig() {
+    private suspend fun initializeAdaptiveConfig(devicePerformanceTier: String) {
         // Quick 5-second benchmark
         quickBenchmarkScore = withContext(Dispatchers.Default) {
             QuickBenchmark.getCPUScore()
         }
         
-        deviceTier = QuickBenchmark.getDeviceTier(quickBenchmarkScore)
+        deviceTier = devicePerformanceTier
         stressConfig = AdaptiveStressConfig.getConfig(deviceTier!!)
         
         Log.d("StressTestEngine", "Quick Benchmark: $quickBenchmarkScore")
@@ -126,29 +126,33 @@ class StressTestEngine(private val context: Context) {
     suspend fun runCpuStressTest(
         onProgress: (Float) -> Unit,
         quickBenchmarkScore: Int,
-        deviceAgeYears: Float
-    ): CpuStressResult = withContext(Dispatchers.Default) {
-        // Initialize adaptive config if not done
-        if (stressConfig == null) {
-            initializeAdaptiveConfig()
-        }
-        val config = stressConfig!!
+        deviceAgeYears: Float,
+        devicePerformanceTier: String
+    ): CpuStressResult {
+        return withContext(Dispatchers.Default) {
+            // Initialize adaptive config if not done
+            if (stressConfig == null) {
+                initializeAdaptiveConfig(devicePerformanceTier)
+            }
+            val config = stressConfig!!
+            // Use the raw score from initializeAdaptiveConfig (populated by getCPUScore)
+            val rawScore = this@StressTestEngine.quickBenchmarkScore
 
-        val iterations = calculateDynamicIterations(
-            benchmarkScore = quickBenchmarkScore,
-            deviceAgeYears = deviceAgeYears
-        )
+            val iterations = calculateDynamicIterations(
+                benchmarkScore = rawScore,
+                deviceAgeYears = deviceAgeYears
+            )
 
-        Log.d("CPUStress", "Using $iterations iterations (90% load)")
+            Log.d("CPUStress", "Using $iterations iterations (90% load)")
 
-        val cores = Runtime.getRuntime().availableProcessors()
-        val durationSeconds = config.cpuTestDuration
-        val tempReadings = mutableListOf<TempReading>()
-        val freqReadings = mutableListOf<FreqReading>()
+            val cores = Runtime.getRuntime().availableProcessors()
+            val durationSeconds = config.cpuTestDuration
+            val tempReadings = mutableListOf<TempReading>()
+            val freqReadings = mutableListOf<FreqReading>()
 
-        val startTime = System.currentTimeMillis()
-        var maxTemp = 0f
-        var throttlingStartSec: Int? = null
+            val startTime = System.currentTimeMillis()
+            var maxTemp = 0f
+            var throttlingStartSec: Int? = null
         var initialFreq = 0
 
         // Start monitoring job
@@ -179,42 +183,51 @@ class StressTestEngine(private val context: Context) {
             }
         }
 
-        // Launch CPU-intensive workloads on all cores
+        val actualIterations = java.util.concurrent.atomic.AtomicLong(0)
+
         // Launch CPU-intensive workloads on all cores
         // Batch size is derived from iterations so load scales with device capacity
         val batchSize = (iterations / 100).coerceAtLeast(10_000)
-        val jobs = List(cores) {
-            launch {
-                var result = 0.0
-                val endTime = System.currentTimeMillis() + (durationSeconds * 1000)
+        
+        try {
+            val jobs = List(cores) {
+                launch {
+                    var result = 0.0
+                    val endTime = System.currentTimeMillis() + (durationSeconds * 1000L)
 
-                while (System.currentTimeMillis() < endTime) {
-                    repeat(batchSize) { i ->
-                        val x = i.toDouble()
-                        result += sqrt(x) * sin(x) * cos(x) * tan(x / 100.0)
-                        result += ln(abs(x + 1)) * exp(x / 1000000.0)
+                    while (System.currentTimeMillis() < endTime && isActive) {
+                        ensureActive()
+                        repeat(batchSize) { i ->
+                            val x = i.toDouble()
+                            result += sqrt(x) * sin(x) * cos(x) * tan(x / 100.0)
+                            result += ln(abs(x + 1)) * exp(x / 1000000.0)
+                        }
+                        actualIterations.addAndGet(batchSize.toLong())
+                        delay(10) // CRITICAL: Allow UI thread to update
                     }
-                    delay(10) // CRITICAL: Allow UI thread to update
                 }
             }
+
+            // Wait for workload to complete
+            jobs.forEach { it.join() }
+        } catch (e: Exception) {
+            Log.e("StressTestEngine", "CPU test error at ${actualIterations.get()} iterations", e)
+        } finally {
+            monitorJob.cancel()
         }
 
-        // Wait for workload to complete
-        jobs.forEach { it.join() }
-        monitorJob.cancel()
+        // Fix 2: use peak frequency — initialFreq at 5s may be low (CPU idle/ramping up)
+        // Using peakFreq ensures degradation is always 0–100%, never negative
+        val peakFreq  = freqReadings.maxOfOrNull { it.freqMhz } ?: initialFreq
+        val finalFreq = freqReadings.lastOrNull()?.freqMhz ?: peakFreq
+        val degradation = if (peakFreq > 0) {
+            ((peakFreq - finalFreq).toFloat() / peakFreq * 100f).coerceIn(0f, 100f)
+        } else 0f
 
-        // Calculate performance metrics
         val singleCoreScore = calculateCpuScore(cores, 1)
-        val multiCoreScore = calculateCpuScore(cores, cores)
-        val degradation = if (initialFreq > 0) {
-            ((initialFreq - (freqReadings.lastOrNull()?.freqMhz ?: initialFreq)).toFloat() / initialFreq) * 100f
-        } else {
-            0f
-        }
+        val multiCoreScore  = calculateCpuScore(cores, cores)
 
-        withContext(Dispatchers.Main) {
-            onProgress(1.0f)
-        }
+        withContext(Dispatchers.Main) { onProgress(1.0f) }
 
         return@withContext CpuStressResult(
             durationSeconds = durationSeconds,
@@ -224,12 +237,13 @@ class StressTestEngine(private val context: Context) {
             singleCoreScore = singleCoreScore,
             multiCoreScore = multiCoreScore,
             quickBenchmarkScore = quickBenchmarkScore,
-            devicePerformanceTier = deviceTier?.toString() ?: "UNKNOWN",
-            cpuTestIterations = iterations.toLong(),
+            devicePerformanceTier = deviceTier ?: "UNKNOWN",
+            cpuTestIterations = actualIterations.get(),
             tempReadings = tempReadings,
             freqReadings = freqReadings
         )
     }
+}
     
     /**
      * Storage Stress Test (3 minutes)
@@ -238,11 +252,12 @@ class StressTestEngine(private val context: Context) {
      * - Tests random 4K IOPS
      */
     suspend fun runStorageStressTest(
+        devicePerformanceTier: String,
         onProgress: (Float) -> Unit
     ): StorageStressResult = withContext(Dispatchers.IO) {
         // Initialize adaptive config if not done
         if (stressConfig == null) {
-            initializeAdaptiveConfig()
+            initializeAdaptiveConfig(devicePerformanceTier)
         }
         val config = stressConfig!!
 
@@ -256,19 +271,32 @@ class StressTestEngine(private val context: Context) {
         var totalWriteTime = 0L
         var totalReadTime = 0L
         var slcCacheCrash = false
+        var actualFileCount = 0
+        var random4kReadIops = 0
+        var random4kWriteIops = 0
+        var storageType = "UNKNOWN"
+        val endTime = System.currentTimeMillis() + (5 * 60 * 1000L) // 5 minutes max
         
         try {
+            // Fix 1: Generate random data once outside the write loop
+            val data = ByteArray(fileSizeMb * 1024 * 1024).also { Random.nextBytes(it) }
+
             // Sequential Write Test
             for (i in 1..fileCount) {
+                if (System.currentTimeMillis() > endTime) {
+                    Log.w("StressTestEngine", "Storage write time limit reached after \$actualFileCount files")
+                    break
+                }
+                ensureActive()
+
                 val file = File(testDir, "test_$i.dat")
-                val data = ByteArray(fileSizeMb * 1024 * 1024) { Random.nextBytes(1)[0] }
                 
                 val writeStart = System.currentTimeMillis()
-                file.writeBytes(data)
+                file.writeBytes(data) // Reuse the same buffer
                 val writeTime = System.currentTimeMillis() - writeStart
                 totalWriteTime += writeTime
                 
-                val speed = (fileSizeMb.toFloat() / (writeTime / 1000f))
+                val speed = fileSizeMb.toFloat() / (writeTime.toFloat() / 1000f)
                 speedCurve.add(SpeedPoint(i, speed))
                 
                 // Detect SLC cache crash (speed drop > 50%)
@@ -276,52 +304,68 @@ class StressTestEngine(private val context: Context) {
                     slcCacheCrash = true
                 }
                 
+                actualFileCount++
                 withContext(Dispatchers.Main) {
-                    onProgress((i.toFloat() / (fileCount * 2)))
+                    onProgress(i.toFloat() / (fileCount * 2).toFloat())
                 }
-                delay(100)
+                // Removed delay(100) to speed up sequential generation limit
             }
             
             // Sequential Read Test
-            for (i in 1..fileCount) {
+            for (i in 1..actualFileCount) {
+                if (System.currentTimeMillis() > endTime) {
+                    Log.w("StressTestEngine", "Storage read time limit reached")
+                    break
+                }
+                ensureActive()
+
                 val file = File(testDir, "test_$i.dat")
-                val readStart = System.currentTimeMillis()
-                file.readBytes()
-                val readTime = System.currentTimeMillis() - readStart
-                totalReadTime += readTime
+                if (file.exists()) {
+                    val readStart = System.currentTimeMillis()
+                    file.readBytes()
+                    val readTime = System.currentTimeMillis() - readStart
+                    totalReadTime += readTime
+                }
                 
                 withContext(Dispatchers.Main) {
-                    onProgress((fileCount + i).toFloat() / (fileCount * 2))
+                    onProgress((fileCount + i).toFloat() / (fileCount * 2).toFloat())
                 }
                 delay(100)
             }
             
-            val avgWriteSpeed = (fileCount * fileSizeMb).toFloat() / (totalWriteTime / 1000f)
-            val avgReadSpeed = (fileCount * fileSizeMb).toFloat() / (totalReadTime / 1000f)
-            
             // Fix #3: Random 4K IOPS Test
-            val random4kReadIops = measureRandom4kReadIOPS()
-            val random4kWriteIops = performRandom4KTest(testDir, false) // Keep legacy write test for now
+            if (System.currentTimeMillis() < endTime) {
+                random4kReadIops = measureRandom4kReadIOPS()
+                random4kWriteIops = performRandom4KTest(testDir, false) // Keep legacy write test for now
+            }
             
-            // Detect storage type based on speed
-            val storageType = detectStorageType(avgWriteSpeed)
-            
-            return@withContext StorageStressResult(
-                sequentialWriteMbps = avgWriteSpeed,
-                sequentialReadMbps = avgReadSpeed,
-                random4kReadIops = random4kReadIops,
-                random4kWriteIops = random4kWriteIops,
-                slcCacheCrash = slcCacheCrash,
-                detectedType = storageType,
-                storageTestFileCount = fileCount,
-                writeSpeedCurve = speedCurve
-            )
+        } catch (e: Exception) {
+            Log.e("StressTestEngine", "Storage test error after \$actualFileCount files", e)
         } finally {
             // Cleanup
             testDir.listFiles()?.forEach { it.delete() }
             testDir.delete()
-            onProgress(1.0f)
+            withContext(Dispatchers.Main) {
+                onProgress(1.0f)
+            }
         }
+        
+        val avgWriteSpeed = if (actualFileCount > 0) (actualFileCount * fileSizeMb).toFloat() / (totalWriteTime.toFloat() / 1000f) else 0f
+        val avgReadSpeed  = if (actualFileCount > 0 && totalReadTime > 0) (actualFileCount * fileSizeMb).toFloat() / (totalReadTime.toFloat() / 1000f) else 0f
+            
+        // Detect storage type based on speed
+        storageType = detectStorageType(avgWriteSpeed)
+            
+        return@withContext StorageStressResult(
+            sequentialWriteMbps = avgWriteSpeed,
+            sequentialReadMbps = avgReadSpeed,
+            random4kReadIops = random4kReadIops,
+            random4kWriteIops = random4kWriteIops,
+            slcCacheCrash = slcCacheCrash,
+            detectedType = storageType,
+            storageTestFileCount = actualFileCount,
+            writeSpeedCurve = speedCurve
+        )
     }
     
     /**
@@ -436,9 +480,10 @@ class StressTestEngine(private val context: Context) {
         onProgress: (Float) -> Unit,
         context: Context,
         deviceAgeYears: Float,
-        designCapacityMah: Int
+        designCapacityMah: Int,
+        devicePerformanceTier: String
     ): BatteryStressResult = withContext(Dispatchers.Default) {
-        if (stressConfig == null) initializeAdaptiveConfig()
+        if (stressConfig == null) initializeAdaptiveConfig(devicePerformanceTier)
         val config = stressConfig!!
         val durationSeconds = config.batteryTestDuration
         
@@ -501,7 +546,7 @@ class StressTestEngine(private val context: Context) {
             val cores = Runtime.getRuntime().availableProcessors()
             val jobs = List(cores) {
                 launch {
-                    val endTime = loadStartTime + (durationSeconds * 1000L)
+                    val endTime = loadStartTime + (durationSeconds.toLong() * 1000L)
                     var result = 0.0
                     while (System.currentTimeMillis() < endTime) {
                         repeat(10_000) { i -> result += sqrt(i.toDouble()) * sin(i.toDouble()) }

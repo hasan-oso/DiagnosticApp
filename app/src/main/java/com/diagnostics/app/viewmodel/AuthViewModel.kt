@@ -13,11 +13,14 @@
 package com.diagnostics.app.viewmodel
 
 import android.app.Application
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.diagnostics.app.data.models.auth.RegistrationData
 import com.diagnostics.app.data.models.auth.ShopAccount
 import com.diagnostics.app.data.repository.AuthRepository
+import com.diagnostics.app.utils.LanguageManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +28,7 @@ import kotlinx.coroutines.launch
 
 /**
  * AuthViewModel — Business logic for authentication flows.
- * Manages login, registration, and auth state.
+ * Manages login, registration, auth state, and language string handling.
  */
 class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -43,6 +46,38 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _registerState = MutableStateFlow<RegisterState>(RegisterState.Idle)
     val registerState: StateFlow<RegisterState> = _registerState.asStateFlow()
 
+    private val _logoUri = MutableStateFlow<Uri?>(null)
+    val logoUri: StateFlow<Uri?> = _logoUri.asStateFlow()
+
+    private val _logoUrl = MutableStateFlow<String?>(null)
+    val logoUrl: StateFlow<String?> = _logoUrl.asStateFlow()
+
+    private val _logoUploadState = MutableStateFlow<LogoUploadState>(LogoUploadState.Idle)
+    val logoUploadState: StateFlow<LogoUploadState> = _logoUploadState.asStateFlow()
+
+    fun setLogoUri(uri: Uri) {
+        _logoUri.value = uri
+    }
+
+    fun uploadLogo(context: Context, uri: Uri, shopId: String) {
+        viewModelScope.launch {
+            _logoUploadState.value = LogoUploadState.Loading
+            val result = authRepository.uploadLogoAsBase64(context, uri, shopId)
+            result.fold(
+                onSuccess = { url ->
+                    _logoUrl.value = url
+                    _logoUploadState.value = LogoUploadState.Success
+                },
+                onFailure = { e ->
+                    _logoUploadState.value = LogoUploadState.Error(e.message ?: "فشل رفع الشعار")
+                }
+            )
+        }
+    }
+
+    private val _currentLanguage = MutableStateFlow(LanguageManager.getLanguage(application))
+    val currentLanguage: StateFlow<LanguageManager.Language> = _currentLanguage.asStateFlow()
+
     init {
         // Load shop profile if already logged in
         if (authRepository.isLoggedIn) {
@@ -51,6 +86,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 _authState.value = AuthState.Authenticated(profile)
             }
         }
+    }
+
+    fun setLanguage(language: LanguageManager.Language) {
+        LanguageManager.saveLanguage(getApplication(), language)
+        _currentLanguage.value = language
     }
 
     // ══════════════════════════════════════════════
@@ -160,4 +200,11 @@ sealed class RegisterState {
     object Loading : RegisterState()
     data class Success(val account: ShopAccount) : RegisterState()
     data class Error(val message: String) : RegisterState()
+}
+
+sealed class LogoUploadState {
+    object Idle : LogoUploadState()
+    object Loading : LogoUploadState()
+    object Success : LogoUploadState()
+    data class Error(val message: String) : LogoUploadState()
 }

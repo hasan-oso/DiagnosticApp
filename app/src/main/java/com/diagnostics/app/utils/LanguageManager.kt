@@ -8,39 +8,63 @@
  * 
  * Owner: Hasan Oso
  * Student ID: 230212925
- * Institution: OST?M Technical University
+ * Institution: OSTİM Technical University
  */
 package com.diagnostics.app.utils
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.os.Build
+import android.os.LocaleList
+import java.util.Locale
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
-class LanguageManager(private val context: Context) {
-    
-    private val LANGUAGE_KEY = stringPreferencesKey("language")
-    
-    val currentLanguage: Flow<String> = context.dataStore.data.map { preferences ->
-        preferences[LANGUAGE_KEY] ?: "en"
+object LanguageManager {
+    enum class Language(val code: String, val displayName: String, val flag: String) {
+        TURKISH("tr", "Türkçe", "🇹🇷"),
+        ARABIC("ar", "العربية", "🇸🇦"),
+        ENGLISH("en", "English", "🇬🇧")
     }
-    
-    suspend fun setLanguage(language: String) {
-        // Save to DataStore
-        context.dataStore.edit { preferences ->
-            preferences[LANGUAGE_KEY] = language
+
+    private const val PREFS_NAME = "language_prefs"
+    private const val KEY_LANGUAGE = "app_language"
+
+    private fun getPrefs(context: Context): SharedPreferences {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
+    fun saveLanguage(context: Context, language: Language) {
+        getPrefs(context).edit().putString(KEY_LANGUAGE, language.name).apply()
+    }
+
+    fun getLanguage(context: Context): Language {
+        val savedName = getPrefs(context).getString(KEY_LANGUAGE, Language.ARABIC.name)
+        return try {
+            Language.valueOf(savedName ?: Language.ARABIC.name)
+        } catch (e: Exception) {
+            Language.ARABIC
         }
-        
-        // Apply locale to Android system
-        val localeList = LocaleListCompat.forLanguageTags(language)
-        AppCompatDelegate.setApplicationLocales(localeList)
+    }
+
+    /**
+     * Wraps the given context with the saved locale.
+     * Call this from Activity.attachBaseContext() to ensure
+     * all stringResource() calls use the user's chosen language.
+     */
+    fun wrapContext(context: Context): Context {
+        val language = getLanguage(context)
+        val locale = Locale(language.code)
+        Locale.setDefault(locale)
+
+        val config = Configuration(context.resources.configuration)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            config.setLocales(LocaleList(locale))
+        } else {
+            @Suppress("DEPRECATION")
+            config.locale = locale
+        }
+        config.setLayoutDirection(locale)
+
+        return context.createConfigurationContext(config)
     }
 }

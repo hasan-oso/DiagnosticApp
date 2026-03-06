@@ -30,7 +30,10 @@ import kotlinx.coroutines.launch
 import android.view.WindowManager
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
+import android.Manifest
 import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 
 @Composable
 fun ScanningScreen(
@@ -51,8 +54,19 @@ fun ScanningScreen(
     val viewModel: ScanViewModel = viewModel()
     val scanState by viewModel.scanState.collectAsState()
     
-    LaunchedEffect(Unit) {
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) {
         viewModel.startScan()
+    }
+    
+    LaunchedEffect(Unit) {
+        permissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO
+            )
+        )
     }
     
     Column(
